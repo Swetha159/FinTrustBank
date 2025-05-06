@@ -1,0 +1,57 @@
+
+  /login:
+    handler: LoginHandler
+
+  /new-account:
+    handler: AccountHandler
+
+  /dashboard:
+    handler: CustomerDashboardHandler
+
+  /lasttransactions:
+    handler: TransactionHistoryHandler
+
+  /overallbalance:
+    handler: AccountBalanceHandler
+
+  /totalcredits:
+    handler: CreditTransactionHandler
+
+  /totaldebits:
+    handler: DebitTransactionHandler
+
+  /myprofile:
+    handler: CustomerProfileHandler
+
+  /branch:
+    handler: BranchDetailsHandler
+            
+  /nominee:
+    handler: NomineeHandler
+
+  /accounts:
+    handler: AccountListHandler
+
+  /statement:
+    handler: AccountStatementHandler
+
+  /admin:
+    handler: AdminDashboardHandler
+
+  /account:
+    handler: AccountDetailsHandler
+
+  /transaction:
+    handler: TransactionHandler
+
+  /credentials:
+    handler: CredentialsHandler
+
+  /request:
+    handler: ServiceRequestHandler
+
+  /branchaccount:
+    handler: BranchAccountHandler
+
+  /account-request:handler: NewAccountHandler
+
