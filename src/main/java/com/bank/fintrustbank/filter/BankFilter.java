@@ -31,17 +31,21 @@ public class BankFilter implements Filter {
 	
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-	        throws IOException, ServletException {
+	         {
 		 HttpServletRequest httpRequest = (HttpServletRequest) request;
 		 HttpServletResponse httpResponse = (HttpServletResponse) response;
 	    
 		String endpoint = httpRequest.getPathInfo();
 	
 	    System.out.println(endpoint);
+	    try {
 	    if (endpointConfig == null) {
-			httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			return;
+			  httpRequest.setAttribute("errorMessage", "Error Handling the request");
+            httpRequest.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
+            return;
 		}
+	  
+	    	
 	    if(endpointConfig.containsKey(endpoint))
 	    {
 	    	 chain.doFilter(request, response);
@@ -49,9 +53,13 @@ public class BankFilter implements Filter {
 	    else
 	    {
 	    	  httpRequest.setAttribute("errorMessage", "The requested endpoint '" + endpoint + "' was not found.");
-	    	    httpRequest.getRequestDispatcher("/WEB_INF/error/error.jsp").forward(request, response);
+	    	    httpRequest.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
 	    }
-	  
+	    }
+	    catch(IOException | ServletException e )
+	    {
+	    	e.printStackTrace();
+	    }
 	}
 
 

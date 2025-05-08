@@ -4,9 +4,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
+import com.zoho.training.exceptions.TaskException;
+
 public class IdCreation {
 
-    public static String createPersonId() {
+    public static String createPersonId() throws TaskException {
         String prefix = "FTB03";
         Random rand = new Random();
         
@@ -20,7 +22,7 @@ public class IdCreation {
         return prefix + hash.substring(0, 7);
     }
 
-    private static String generateHash(String input) {
+    private static String generateHash(String input) throws TaskException {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hashBytes = digest.digest(input.getBytes());
@@ -32,7 +34,7 @@ public class IdCreation {
             
             return hexString.toString();
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Error generating hash", e);
+            throw new TaskException("Error generating hash", e);
         }
     }
 }

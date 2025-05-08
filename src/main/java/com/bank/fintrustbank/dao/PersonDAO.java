@@ -20,8 +20,8 @@ public class PersonDAO {
 
 		System.out.println(email + password);
 		Query loginQuery = new QueryBuilder()
-				.select("person_id", "role","password")
-				.from("Person")
+				.select("person_id", "role","password","status")
+				.from("person")
 				.where("email", "=", email)
 				.build();
 		
@@ -32,6 +32,7 @@ public class PersonDAO {
 		String personId = (String) resultMap.get("person_id");
 		String role = (String) resultMap.get("role");
         String passwordHash  = (String)resultMap.get("password");
+        String status = (String) resultMap.get("status");
        if(Password.verifyPassword(password, passwordHash)) 
        {
 		Person person =new Person();
@@ -50,7 +51,7 @@ public class PersonDAO {
 		
 		
 		Query addCustomerQuery  = new QueryBuilder()
-				.insert("Person")
+				.insert("person")
 				.values(person.getPersonId(),person.getName(),person.getEmail(),person.getPhoneNumber(),person.getRole(),person.getPassword(),
 						person.getStatus(),person.getDob(),person.getAadhar(),person.getPan(),person.getAddress(),person.getCreatedAt(),
 						person.getModifiedAt(),person.getModifiedBy())
@@ -66,15 +67,39 @@ public class PersonDAO {
 	}
 
 	public Query getInsertQuery(Person person) throws TaskException {
-		Query addCustomerQuery  = new QueryBuilder()
-				.insert("Person")
+		Query insertQuery  = new QueryBuilder()
+				.insert("person")
 				.values(person.getPersonId(),person.getName(),person.getEmail(),person.getPhoneNumber(),person.getRole(),person.getPassword(),
 						person.getStatus(),person.getDob(),person.getAadhar(),person.getPan(),person.getAddress(),person.getCreatedAt(),
 						person.getModifiedAt(),person.getModifiedBy())
 				.build();
-				System.out.println(addCustomerQuery.getQuery());	
-				return addCustomerQuery ;
+				System.out.println(insertQuery.getQuery());	
+				return insertQuery ;
 	}
-	
-//	 
+
+	public boolean addPerson(Person person) throws TaskException {
+		
+		Query addPersonQuery  = new QueryBuilder()
+				.insert("person")
+				.values(person.getPersonId(),person.getName(),person.getEmail(),person.getPhoneNumber(),person.getRole(),person.getPassword(),
+						person.getStatus(),person.getDob(),person.getAadhar(),person.getPan(),person.getAddress(),person.getCreatedAt(),
+						person.getModifiedAt(),person.getModifiedBy())
+				.build();
+				System.out.println(addPersonQuery.getQuery());
+				int result = qe.execute(addPersonQuery.getQuery(), addPersonQuery.getValues());
+				System.out.println(result);
+				if (result > 0) {
+					return true;
+				}
+				return false;	
+	}
+
+	public Query getUpdateStatusQuery (String customerId,String status) throws TaskException {
+		Query updateStatusQuery = new QueryBuilder()
+				.update("person")
+				.set("status", status)
+				.where("person_id","=", "customerId")
+				.build();
+		return updateStatusQuery ;
+	} 
 }

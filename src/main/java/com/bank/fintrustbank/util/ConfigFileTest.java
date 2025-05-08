@@ -17,7 +17,7 @@ public class ConfigFileTest {
 		Properties property = helper.getProperty();
 		helper.addProperty(property,"DB_USER", "SwethaS");
 		helper.addProperty(property,"DB_PASSWORD", "1765");
-		helper.addProperty(property,"DB_URL", "jdbc:mysql://localhost:3306/FTbank");
+		helper.addProperty(property,"DB_URL", "jdbc:mysql://localhost:3306/fintrust_bank");
 		helper.addProperty(property,"POOL_SIZE" , "10");
 		helper.addProperty(property ,"DB_DRIVER","com.mysql.cj.jdbc.Driver");
 		helper.storePropertyInFile(property,"DB Connection",file);

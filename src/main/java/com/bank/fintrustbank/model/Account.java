@@ -7,7 +7,6 @@ public class Account {
 	private String accountType;
 	private double balance;
 	private String status ;
-	private boolean primaryAccount;
 	private long createdAt;
 	private long modifiedAt;
 	private String modifiedBy;
@@ -46,12 +45,7 @@ public class Account {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public boolean isPrimaryAccount() {
-		return primaryAccount;
-	}
-	public void setPrimaryAccount(boolean primaryAccount) {
-		this.primaryAccount = primaryAccount;
-	}
+
 	public long getCreatedAt() {
 		return createdAt;
 	}

@@ -1,18 +1,22 @@
 package com.bank.fintrustbank.controller;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.bank.fintrustbank.handler.HttpRequestHandler;
+import com.zoho.training.exceptions.TaskException;
 
 public class EndpointDispatcher {
 	
 
 	public void dispatch(String endpoint, Map<String, Map<String, String>> endpointConfig, HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
+			HttpServletResponse response) throws TaskException {
 
 		if (endpointConfig == null) {
 			(response).setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -21,12 +25,12 @@ public class EndpointDispatcher {
 
 		System.out.println("Endpoint: " + endpoint);
 		System.out.println(endpointConfig.containsKey(endpoint));
-
-		if (endpointConfig.containsKey(endpoint)) {
+		try {
+		if (endpointConfig.containsKey(endpoint)) { 
 			String handlerClassName = endpointConfig.get(endpoint).get("handler");
 			System.out.println(handlerClassName);
 
-			try {
+			
 				Class<?> handlerClass = Class.forName("com.bank.fintrustbank.handler." + handlerClassName);
 				HttpRequestHandler handler = (HttpRequestHandler) handlerClass.getDeclaredConstructor().newInstance();
 
@@ -46,12 +50,17 @@ public class EndpointDispatcher {
 				default:
 					( response).sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "Unsupported HTTP method");
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				( response).sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error processing the request");
-			}
-		} else {
-			( response).sendError(HttpServletResponse.SC_NOT_FOUND, "Endpoint not found");
+			} 
+		 else {
+			request.setAttribute("errorMessage","Endpoint not found" );
+			 RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB_INF/error/error.jsp");
+		        requestDispatcher.forward(request, response);
+		}
+	}
+		catch (TaskException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | ClassNotFoundException | IOException | ServletException  e) {
+			e.printStackTrace();
+			throw new TaskException(e.getMessage(),e);
+
 		}
 
 	}

@@ -2,81 +2,82 @@ package com.bank.fintrustbank.model;
 
 public class Branch {
 
-    private int branchId;
-    private long managerId;
+    private String branchId;
+    private String managerId;
     private String ifscCode;
     private String location;
     private long createdAt;
     private long modifiedAt;
-    private long modifiedBy;
+    private String  modifiedBy;
 
    
     public Branch() {}
 
-    public Branch(int branchId, long managerId, String ifscCode, String location,
-                  long createdAt, long modifiedAt, long modifiedBy) {
-        this.branchId = branchId;
-        this.managerId = managerId;
-        this.ifscCode = ifscCode;
-        this.location = location;
-        this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
-        this.modifiedBy = modifiedBy;
+    public Branch(String branchId, String managerId, String ifscCode, String location,
+                  long createdAt, long modifiedAt, String modifiedBy) {
+        this.setBranchId(branchId);
+        this.setManagerId(managerId);
+        this.setIfscCode(ifscCode);
+        this.setLocation(location);
+        this.setCreatedAt(createdAt);
+        this.setModifiedAt(modifiedAt);
+        this.setModifiedBy(modifiedBy);
     }
 
-    public int getBranchId() {
-        return branchId;
-    }
+	public String getModifiedBy() {
+		return modifiedBy;
+	}
 
-    public void setBranchId(int branchId) {
-        this.branchId = branchId;
-    }
+	public void setModifiedBy(String modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
 
-    public long getManagerId() {
-        return managerId;
-    }
+	public long getModifiedAt() {
+		return modifiedAt;
+	}
 
-    public void setManagerId(long managerId) {
-        this.managerId = managerId;
-    }
+	public void setModifiedAt(long modifiedAt) {
+		this.modifiedAt = modifiedAt;
+	}
 
-    public String getIfscCode() {
-        return ifscCode;
-    }
+	public long getCreatedAt() {
+		return createdAt;
+	}
 
-    public void setIfscCode(String ifscCode) {
-        this.ifscCode = ifscCode;
-    }
+	public void setCreatedAt(long createdAt) {
+		this.createdAt = createdAt;
+	}
 
-    public String getLocation() {
-        return location;
-    }
+	public String getLocation() {
+		return location;
+	}
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
+	public void setLocation(String location) {
+		this.location = location;
+	}
 
-    public long getCreatedAt() {
-        return createdAt;
-    }
+	public String getIfscCode() {
+		return ifscCode;
+	}
 
-    public void setCreatedAt(long createdAt) {
-        this.createdAt = createdAt;
-    }
+	public void setIfscCode(String ifscCode) {
+		this.ifscCode = ifscCode;
+	}
 
-    public long getModifiedAt() {
-        return modifiedAt;
-    }
+	public String getManagerId() {
+		return managerId;
+	}
 
-    public void setModifiedAt(long modifiedAt) {
-        this.modifiedAt = modifiedAt;
-    }
+	public void setManagerId(String managerId) {
+		this.managerId = managerId;
+	}
 
-    public long getModifiedBy() {
-        return modifiedBy;
-    }
+	public String getBranchId() {
+		return branchId;
+	}
 
-    public void setModifiedBy(long modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
+	public void setBranchId(String branchId) {
+		this.branchId = branchId;
+	}
+
 }

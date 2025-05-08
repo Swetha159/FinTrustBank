@@ -1,6 +1,7 @@
 package com.bank.fintrustbank.service;
 
 import com.bank.fintrustbank.dao.AccountDAO;
+import com.bank.fintrustbank.dao.AccountRequestDAO;
 import com.bank.fintrustbank.dao.PersonDAO;
 import com.bank.fintrustbank.model.Account;
 import com.bank.fintrustbank.model.Person;
@@ -16,12 +17,14 @@ public class NewAccountService {
 
 	PersonDAO personDAO = new PersonDAO();
 	AccountDAO accountDAO = new AccountDAO();
+	AccountRequestDAO requestDAO = new AccountRequestDAO();
 	QueryExecutor qe = new QueryExecutor();
-	public boolean createNewCustomerWIthAccount(Person person ,Account account) throws TaskException, SQLException
+	public boolean createNewCustomerWithAccount(Person person ,Account account) throws TaskException, SQLException
 	{
 		List<Query> queryList = new ArrayList<>();
 		queryList.add(personDAO.getInsertQuery(person));
 		queryList.add(accountDAO.getInsertQuery(account));
+		queryList.add(requestDAO.getAcceptRequestQuery(person.getPersonId()));
 	  if(qe.transaction(queryList))
 	  {
 		  return true;

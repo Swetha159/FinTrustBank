@@ -12,11 +12,7 @@ public class AccountDAO {
 	QueryExecutor qe = new QueryExecutor();
 	public boolean addAccount(Account account) throws TaskException {
 		
-		Query addAccountQuery  = new QueryBuilder()
-				.insert("Account")
-				.values(account.getAccountNo(),account.getCustomerId(),account.getBranchId(),account.getAccountType(),account.getBalance(),
-						account.getStatus(),account.isPrimaryAccount(),account.getCreatedAt(),account.getModifiedAt(),account.getModifiedBy())
-				.build();
+		Query addAccountQuery  = getInsertQuery(account);
 				System.out.println(addAccountQuery.getQuery());
 				int result = qe.execute(addAccountQuery.getQuery(), addAccountQuery.getValues());
 				System.out.println(result);
@@ -30,9 +26,9 @@ public class AccountDAO {
 public Query getInsertQuery(Account account) throws TaskException {
 		
 		Query addAccountQuery  = new QueryBuilder()
-				.insert("Account")
+				.insert("account")
 				.values(account.getAccountNo(),account.getCustomerId(),account.getBranchId(),account.getAccountType(),account.getBalance(),
-						account.getStatus(),account.isPrimaryAccount(),account.getCreatedAt(),account.getModifiedAt(),account.getModifiedBy())
+						account.getStatus(),account.getCreatedAt(),account.getModifiedAt(),account.getModifiedBy())
 				.build();
 				System.out.println(addAccountQuery.getQuery());	
 				return addAccountQuery;

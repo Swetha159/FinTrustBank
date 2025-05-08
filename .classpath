@@ -40,12 +40,12 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/home/swetha-tt0686/Desktop/QueryBuilder.jar"/>
 	<classpathentry kind="lib" path="/home/swetha-tt0686/Downloads/json-20230227.jar"/>
 	<classpathentry kind="lib" path="/home/swetha-tt0686/Downloads/jackson-datatype-jsr310-2.18.3.jar"/>
 	<classpathentry kind="lib" path="/home/swetha-tt0686/Downloads/jackson-core-2.18.3.jar"/>
 	<classpathentry kind="lib" path="/home/swetha-tt0686/Downloads/jackson-databind-2.18.3.jar"/>
 	<classpathentry kind="lib" path="/home/swetha-tt0686/Downloads/jackson-annotations-2.18.3.jar"/>
 	<classpathentry kind="lib" path="/home/swetha-tt0686/Downloads/jbcrypt-0.4.jar"/>
+	<classpathentry kind="lib" path="/home/swetha-tt0686/Desktop/QueryBuilder.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
