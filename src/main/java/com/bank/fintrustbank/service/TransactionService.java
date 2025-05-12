@@ -47,7 +47,8 @@ public class TransactionService {
 		
 		String creditCustomerId = accountDAO.getCustomerId(debit.getTransactionAccountNo());
 		Transaction receiverTransaction = new Transaction(TransactionIdGenerator.generateTransactionId(timeStamp, debit.getTransactionId())
-				,creditCustomerId,debit.getTransactionAccountNo() , debit.getAccountNo() ,timeStamp , "SUCCESS" , "CREDIT" , ); 
+				,creditCustomerId,debit.getTransactionAccountNo() , debit.getAccountNo() ,timeStamp , "SUCCESS" , "CREDIT" , receiverBalance ,debit.getDescription(),debit.getTransactionBy()
+				); 
 				
 		}
 		
