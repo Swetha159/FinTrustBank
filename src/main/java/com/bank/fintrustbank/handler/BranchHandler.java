@@ -24,6 +24,9 @@ import com.zoho.training.exceptions.TaskException;
 
 public class BranchHandler implements HttpRequestHandler{
 	
+	private static final ObjectMapper mapper = new ObjectMapper()
+	        .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
+	        .findAndRegisterModules();
 	BranchDAO branchDAO = new BranchDAO();
 	 @Override
 	    public void doPost(HttpServletRequest request, HttpServletResponse response) throws TaskException {
@@ -33,8 +36,7 @@ public class BranchHandler implements HttpRequestHandler{
 			 if(path.equals("/branch"))
 			 {
 				 handleAddBranch(request, response);
-				if(path.equals("/branch/brand")) 
-				 
+
 			 }
 			 }catch (IOException  | ServletException e) {
 					e.printStackTrace();
@@ -58,13 +60,23 @@ public class BranchHandler implements HttpRequestHandler{
 			}
 	 }
 
-	private boolean handleUpdateBranch(HttpServletRequest request, HttpServletResponse response) {
+	private boolean handleUpdateBranch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, TaskException {
 		
+
+		HttpSession session = request.getSession(false);
+		if (session == null || session.getAttribute("personId") == null) {
+			request.setAttribute("errorMessage", "session expired");
+			request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
+
+		}
+		String sessionPersonId = (String) session.getAttribute("personId");
+		BufferedReader reader = request.getReader();
 		
+		Branch branch =mapper.readValue(reader,Branch.class);
+		branch.setModifiedBy(sessionPersonId);
+		branch.setModifiedAt(System.currentTimeMillis());
+		return branchDAO.updateBranch(branch);
 		
-		
-		return false;
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -78,8 +90,7 @@ public class BranchHandler implements HttpRequestHandler{
 
 		}
 		String sessionPersonId = (String) session.getAttribute("personId");
-		ObjectMapper mapper = new ObjectMapper()
-				.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE).findAndRegisterModules();
+		
 		String jsonBody = new BufferedReader(request.getReader()).lines().collect(Collectors.joining());
 		JsonNode rootNode = mapper.readTree(jsonBody);
 		String location = rootNode.path("location").asText();

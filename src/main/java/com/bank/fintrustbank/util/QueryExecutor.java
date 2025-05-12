@@ -124,7 +124,7 @@ public class QueryExecutor {
 		}
 	}
 
-	public boolean transaction(List<Query> queryList) throws SQLException {
+	public boolean transact(List<Query> queryList) throws SQLException {
 		try (Connection con = dataSource.getConnection()) {
 			con.setAutoCommit(false);
 			for (Query query : queryList) {

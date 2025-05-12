@@ -1,6 +1,11 @@
 package com.bank.fintrustbank.dao;
 
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
 import com.bank.fintrustbank.model.PrivilegedUser;
+import com.bank.fintrustbank.util.QueryExecutor;
 import com.zoho.training.exceptions.TaskException;
 
 import querybuilder.Query;
@@ -8,6 +13,7 @@ import querybuilder.QueryBuilder;
 
 public class PrivilegedUserDAO {
 
+	QueryExecutor qe = new QueryExecutor();
 	public Query getInsertQuery(PrivilegedUser privilegedUser) throws TaskException {
 		
 		Query insertQuery = new QueryBuilder()
@@ -18,5 +24,7 @@ public class PrivilegedUserDAO {
 		
 		return insertQuery;
 	}
+
+
 
 }

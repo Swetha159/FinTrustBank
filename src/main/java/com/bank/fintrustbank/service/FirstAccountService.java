@@ -57,7 +57,7 @@ public class FirstAccountService {
 			int accountResult = qe.execute(accountInsertQuery.getQuery(), accountInsertQuery.getValues());
 			Query requestAcceptQuery = requestDAO.getAcceptRequestQuery(account.getCustomerId());
 			int requestResult = qe.execute(requestAcceptQuery.getQuery(), requestAcceptQuery.getValues());
-			Query makeActiveQuery = personDAO.getUpdateStatusQuery(account.getCustomerId(), "ACTIVE");
+			Query makeActiveQuery = personDAO.getUpdateStatusQuery(account.getCustomerId(), "ACTIVE",account.getModifiedAt(),account.getModifiedBy());
 			int personResult = qe.execute(makeActiveQuery.getQuery(), makeActiveQuery.getValues());
 			if (accountResult == 1 && requestResult == 1 && personResult == 1) {
 				qe.commitTransaction();

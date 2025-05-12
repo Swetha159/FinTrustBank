@@ -26,5 +26,9 @@ import com.zoho.training.exceptions.TaskException;
 	    default void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException , TaskException{
 	        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "DELETE not supported");
 	    }
+	    
+	    default void doPatch(HttpServletRequest request, HttpServletResponse response) throws IOException , TaskException{
+	        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "PATCH not supported");
+	    }
 	}
 

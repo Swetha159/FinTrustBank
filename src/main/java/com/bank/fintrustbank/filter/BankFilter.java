@@ -12,6 +12,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.bank.fintrustbank.controller.EndpointDispatcher;
 
@@ -48,7 +49,17 @@ public class BankFilter implements Filter {
 	    	
 	    if(endpointConfig.containsKey(endpoint))
 	    {
-	    	 chain.doFilter(request, response);
+	    	HttpSession session = httpRequest.getSession(false);
+			if (session == null || session.getAttribute("personId") == null) {
+				request.setAttribute("errorMessage", "session expired");
+				request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
+
+			}
+			else
+			{
+				 chain.doFilter(request, response);
+			}
+	    	
 	    }
 	    else
 	    {
