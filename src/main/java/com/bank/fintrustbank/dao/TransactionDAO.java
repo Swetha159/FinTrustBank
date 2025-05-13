@@ -20,4 +20,18 @@ public class TransactionDAO {
 		
 	}
 
+	
+public Query updateTransactionStatus(String rowId, String status) throws TaskException
+{
+	
+	Query updateStatus = new QueryBuilder()
+			.update("transaction")
+			.set("transaction_status", status)
+			.where("row_id", "=", rowId)
+			.build();
+	
+			
+			return updateStatus;
+}
+
 }

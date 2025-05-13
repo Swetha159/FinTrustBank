@@ -1,10 +1,8 @@
 package com.bank.fintrustbank.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Transaction {
 	
+	private String rowId;
 	private long transactionId;
 	private String customerId;
 	private long accountNo;
@@ -17,11 +15,12 @@ public class Transaction {
 	private String description ;
 	private String transactionBy ; 
 	
-	public Transaction(long transactionId, String customerId, long transactionAccountNo, long accountNo,
+	public Transaction(String rowId , long transactionId, String customerId, long transactionAccountNo, long accountNo,
 			long dateTime, double amount , String transactionStatus, String transactionType, Double availableBalance, String description,
 			String transactionBy) {
 		
 		
+		this.rowId = rowId ; 
 		this.accountNo=accountNo;
 		this.amount = amount ; 
 		this.availableBalance = availableBalance ;
@@ -38,6 +37,7 @@ public class Transaction {
 		
 		
 	}
+
 	public long getTransactionId() {
 		return transactionId;
 	}
@@ -103,6 +103,12 @@ public class Transaction {
 	}
 	public void setTransactionBy(String transactionBy) {
 		this.transactionBy = transactionBy;
+	}
+	public String getRowId() {
+		return rowId;
+	}
+	public void setRowId(String rowId) {
+		this.rowId = rowId;
 	}
 	
 	

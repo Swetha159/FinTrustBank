@@ -117,5 +117,38 @@ public String getCustomerId(long accountNo) throws TaskException, SQLException {
 	String customerId = (String) resultMap.get("customer_id");
 	return customerId;
 }
+
+
+public Query updateBalance(Long AccountNo , Double balance) throws TaskException
+{
+	Query updateBalance = new QueryBuilder()
+			.update("account")
+			.set("balance", balance)
+			.where("account_no","=",balance)
+			.build();
 	
+	return updateBalance;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
