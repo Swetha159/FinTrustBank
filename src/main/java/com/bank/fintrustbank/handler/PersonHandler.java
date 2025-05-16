@@ -3,6 +3,8 @@ package com.bank.fintrustbank.handler;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
@@ -42,7 +44,56 @@ public class PersonHandler implements HttpRequestHandler  {
 			throw new TaskException(e.getMessage(), e);
 		}
  }
+	@Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws TaskException {
+	 String path = request.getPathInfo();
+	 try {
+	 if(path.equals("/customers"))
+	 {
+		 handleGetCustomers(request,response);
+	 }
+	 else if(path.equals("/customer/details"))
+	 {
+		 handleGetCustomerDetails(request,response);
+	 }
 	
+	 }catch (IOException | SQLException  e) {
+			e.printStackTrace();
+			throw new TaskException(e.getMessage(), e);
+		}
+ }
+	private void handleGetCustomerDetails(HttpServletRequest request, HttpServletResponse response) throws TaskException, SQLException, IOException {
+
+		String jsonBody = new BufferedReader(request.getReader()).lines().collect(Collectors.joining());
+		JsonNode rootNode = mapper.readTree(jsonBody);
+		
+		String personId = rootNode.path("person_id").asText();
+		Map<String,Object>  details  = personDAO.getPersonDetails(personId);
+		if(details!=null)
+		{
+			
+		}else
+		{
+			
+		}
+		
+	}
+	private void handleGetCustomers(HttpServletRequest request, HttpServletResponse response) throws IOException, TaskException, SQLException {
+		
+		String jsonBody = new BufferedReader(request.getReader()).lines().collect(Collectors.joining());
+		JsonNode rootNode = mapper.readTree(jsonBody);
+		
+		String branchId = rootNode.path("branch_id").asText();
+		List<Map<String,Object>>  customers  = personDAO.getCustomers(branchId);
+		if(customers!=null)
+		{
+			
+		}else
+		{
+			
+		}
+		
+	}
 	@Override
 	public void doPatch(HttpServletRequest request , HttpServletResponse response) throws TaskException
 	{
@@ -120,9 +171,7 @@ public class PersonHandler implements HttpRequestHandler  {
 		String role = rootNode.path("role").asText();
 		String newRole = rootNode.path("new_role").asText();
 		String branchId = rootNode.path("branch_id").asText();
-		
 		String personId = rootNode.path("person_id").asText();
-		
 		
 		Long modifiedAt = System.currentTimeMillis();
 	

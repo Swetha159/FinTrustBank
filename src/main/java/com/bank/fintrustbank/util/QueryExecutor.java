@@ -26,6 +26,7 @@ public class QueryExecutor {
 				PreparedStatement statement = conn.prepareStatement(query)) {
 
 			setParameters(statement, values);
+			
 			System.out.println(statement);
 			rowAffected = statement.executeUpdate();
 

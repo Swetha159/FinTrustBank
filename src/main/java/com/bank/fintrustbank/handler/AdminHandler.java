@@ -3,6 +3,8 @@ package com.bank.fintrustbank.handler;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
@@ -10,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.bank.fintrustbank.dao.PersonDAO;
 import com.bank.fintrustbank.factory.PersonFactory;
 import com.bank.fintrustbank.factory.PrivilegedUserFactory;
 import com.bank.fintrustbank.model.Person;
@@ -43,7 +46,41 @@ public class AdminHandler implements HttpRequestHandler{
 				}
 			 
 	  }
+	  
+	  @Override
+	    public void doGet(HttpServletRequest request, HttpServletResponse response) throws TaskException {
+		  
+			 String path = request.getPathInfo();
+			 try {
+			 if(path.equals("/admin"))
+			 {
+				 handleGetAdmins(request, response);
+				 
+				 
+			 }
+			 }catch (IOException | SQLException e) {
+					e.printStackTrace();
+					throw new TaskException(e.getMessage(), e);
+				}
+			 
+	  }
 
+	private void handleGetAdmins(HttpServletRequest request, HttpServletResponse response) throws IOException, TaskException, SQLException {
+		String jsonBody = new BufferedReader(request.getReader()).lines().collect(Collectors.joining());
+		JsonNode rootNode = mapper.readTree(jsonBody);
+
+		String branchId = rootNode.path("branch_id").asText();	
+		
+		List<Map<String,Object>> result = new PersonDAO().getAdmins(branchId);
+		if(result!= null)
+		{
+			
+		}
+		else
+		{
+			
+		}
+	}
 	private void handleAddAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, TaskException, SQLException {
 		
 

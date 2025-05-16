@@ -8,11 +8,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.bank.fintrustbank.dao.PersonDAO;
 import com.bank.fintrustbank.model.Person;
 import com.zoho.training.exceptions.TaskException;
+
 
 public class LoginHandler implements HttpRequestHandler {
 
@@ -41,7 +43,7 @@ public class LoginHandler implements HttpRequestHandler {
 	}
 
 	public static void handleLogin(HttpServletRequest request, HttpServletResponse response)
-			throws TaskException, IOException, SQLException{
+			throws TaskException, IOException, SQLException, JSONException{
 
 		StringBuilder sb = new StringBuilder();
 	

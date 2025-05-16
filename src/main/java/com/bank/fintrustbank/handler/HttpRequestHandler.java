@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.zoho.training.exceptions.TaskException;
-
 	
 	public interface HttpRequestHandler {
 	    default void doGet(HttpServletRequest request, HttpServletResponse response) throws TaskException, IOException{

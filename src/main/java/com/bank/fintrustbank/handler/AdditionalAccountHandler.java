@@ -2,7 +2,6 @@ package com.bank.fintrustbank.handler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
@@ -11,12 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.bank.fintrustbank.dao.AccountDAO;
+
 import com.bank.fintrustbank.factory.AccountFactory;
 import com.bank.fintrustbank.model.Account;
-import com.bank.fintrustbank.model.Person;
-import com.bank.fintrustbank.service.NewAccountService;
-import com.bank.fintrustbank.util.AccountNumberGenerator;
-import com.bank.fintrustbank.util.Password;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;

@@ -10,42 +10,18 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="lib" path="/home/swetha-tt0686/Downloads/mysql-connector-java-8.0.25.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/home/swetha-tt0686/Downloads/snakeyaml-2.2.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/home/swetha-tt0686/Desktop/Property.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/home/swetha-tt0686/Desktop/TaskException.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/home/swetha-tt0686/Downloads/HikariCP-3.4.5.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/home/swetha-tt0686/Downloads/slf4j-api-2.0.12.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/home/swetha-tt0686/Downloads/json-20230227.jar"/>
-	<classpathentry kind="lib" path="/home/swetha-tt0686/Downloads/jackson-datatype-jsr310-2.18.3.jar"/>
-	<classpathentry kind="lib" path="/home/swetha-tt0686/Downloads/jackson-core-2.18.3.jar"/>
-	<classpathentry kind="lib" path="/home/swetha-tt0686/Downloads/jackson-databind-2.18.3.jar"/>
-	<classpathentry kind="lib" path="/home/swetha-tt0686/Downloads/jackson-annotations-2.18.3.jar"/>
-	<classpathentry kind="lib" path="/home/swetha-tt0686/Downloads/jbcrypt-0.4.jar"/>
-	<classpathentry kind="lib" path="/home/swetha-tt0686/Desktop/QueryBuilder.jar"/>
+	<classpathentry kind="lib" path="/home/swetha-23428/Downloads/jbcrypt-0.4.jar"/>
+	<classpathentry kind="lib" path="/home/swetha-23428/Downloads/json-20230227.jar"/>
+	<classpathentry kind="lib" path="/home/swetha-23428/Downloads/mysql-connector-java-8.0.25.jar"/>
+	<classpathentry kind="lib" path="/home/swetha-23428/Downloads/slf4j-api-2.0.12.jar"/>
+	<classpathentry kind="lib" path="/home/swetha-23428/Downloads/snakeyaml-2.2.jar"/>
+	<classpathentry kind="lib" path="/home/swetha-23428/Downloads/HikariCP-3.4.5.jar"/>
+	<classpathentry kind="lib" path="/home/swetha-23428/Downloads/jackson-annotations-2.18.3.jar"/>
+	<classpathentry kind="lib" path="/home/swetha-23428/Downloads/jackson-core-2.18.3.jar"/>
+	<classpathentry kind="lib" path="/home/swetha-23428/Downloads/jackson-databind-2.18.3.jar"/>
+	<classpathentry kind="lib" path="/home/swetha-23428/Downloads/jackson-datatype-jsr310-2.18.3.jar"/>
+	<classpathentry kind="lib" path="/home/swetha-23428/Documents/Property.jar"/>
+	<classpathentry kind="lib" path="/home/swetha-23428/Documents/TaskException.jar"/>
+	<classpathentry kind="lib" path="/home/swetha-23428/Desktop/QueryBuilder.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

@@ -25,7 +25,7 @@ public class NewAccountService {
 		queryList.add(personDAO.getInsertQuery(person));
 		queryList.add(accountDAO.getInsertQuery(account));
 		queryList.add(requestDAO.getAcceptRequestQuery(person.getPersonId()));
-	  if(qe.transaction(queryList))
+	  if(qe.transact(queryList))
 	  {
 		  return true;
 	  }

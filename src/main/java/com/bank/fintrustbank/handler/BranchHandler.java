@@ -3,6 +3,8 @@ package com.bank.fintrustbank.handler;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
@@ -47,6 +49,57 @@ public class BranchHandler implements HttpRequestHandler{
 	  }
 	 
 	 @Override
+	    public void doGet(HttpServletRequest request, HttpServletResponse response) throws TaskException {
+		  
+			 String path = request.getPathInfo();
+			 try {
+			 if(path.equals("/branches"))
+			 {
+				 handleGetBranches(request, response);
+
+			 }
+			 if(path.equals("/branchdetails"))
+			 {
+				 handleBranchDetails(request,response);
+			 }
+			 }catch (SQLException e) {
+					e.printStackTrace();
+					throw new TaskException(e.getMessage(), e);
+				}
+			 
+			 
+	  }
+	 
+	 private void handleBranchDetails(HttpServletRequest request, HttpServletResponse response) throws TaskException, SQLException {
+		 HttpSession session = request.getSession(false);
+			String sessionPersonId = (String) session.getAttribute("personId");
+
+			List<Map<String,Object>>  details  = branchDAO.getBranchDetails(sessionPersonId);
+			if(details!=null)
+			{
+				
+			}else
+			{
+				
+			}
+		
+	}
+
+	private void handleGetBranches(HttpServletRequest request, HttpServletResponse response) throws TaskException, SQLException {
+
+		 
+		 List<Map<String , Object>>  result = branchDAO.getBranches();
+		 if(result!= null)
+		 {
+			 
+		 }
+		 else
+		 {
+			 
+		 }
+	}
+
+	@Override
 	    public void doPut(HttpServletRequest request, HttpServletResponse response) throws TaskException {
 		 String path = request.getPathInfo();
 		 try {

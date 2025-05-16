@@ -5,12 +5,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import com.bank.fintrustbank.model.Branch;
 import com.bank.fintrustbank.model.Person;
 import com.bank.fintrustbank.util.Password;
 import com.bank.fintrustbank.util.QueryExecutor;
 import com.zoho.training.exceptions.TaskException;
 
+import querybuilder.OnClause;
 import querybuilder.Query;
 import querybuilder.QueryBuilder;
 
@@ -134,5 +134,61 @@ public class PersonDAO {
 		return false;
 
 	}
-
+	
+	public List<Map<String,Object>>  getCustomers(String branchId) throws TaskException, SQLException
+	{
+		Query getCustomers = new QueryBuilder()
+				.select("person_id","name","email","phone_number","account.account_no","account.balance","status")
+				.from("person").join("INNER", "account", new OnClause("account.customer_id","=", "person.person_id"))
+				.where("branch_id", "=", branchId)
+				.and("role","=","CUSTOMER")
+				.build();
+		
+		System.out.println(getCustomers.getQuery());
+		List<Map<String, Object>> result = qe.executeQuery(getCustomers.getQuery(), getCustomers.getValues());
+		System.out.println(result);
+		return result ; 
+	}
+	
+	
+	public Map<String,Object> getPersonDetails (String personId ) throws TaskException, SQLException
+	{
+		Query getPersonDetails  = new QueryBuilder()
+				.select("person.person_id" ,"person.name","person.email","person.phone_number","person.status", "person.dob","person.aadhar","person.pan","person.address" ,"person.created_at","person.modified_at","modifier.modified_by" , "modifier.name")				
+				.from("person")
+				.join("INNER", "person", "modifier" , new OnClause("person.modified_by","=", "modifier.modified_by"))
+				.where("person.person_id","=",personId)
+				.build();
+		System.out.println(getPersonDetails.getQuery());
+		List<Map<String, Object>> result = qe.executeQuery(getPersonDetails.getQuery(), getPersonDetails.getValues());
+		Map<String,Object> details = result.get(0);
+		System.out.println(details);
+		if(details.isEmpty())
+		{
+			return null ; 
+		}
+		return details ; 
+		
+	}
+	
+	public List<Map<String,Object>> getAdmins(String branchId) throws TaskException, SQLException
+	{
+		Query getAdmins  = new QueryBuilder()
+							.select("person_id","name","email","phone_number","status")
+							.from("person")
+							.join("INNER", "privileged_user" , new OnClause("privileged_user.admin_id","=","person.person_id"))
+							.where("branch_id","=",branchId)
+							.and("role","=","ADMIN")
+							.build();
+		System.out.println(getAdmins.getQuery());
+		List<Map<String, Object>> result = qe.executeQuery(getAdmins.getQuery(), getAdmins.getValues());
+		System.out.println(result);
+		if(result.isEmpty())
+		{
+			return null ; 
+		}
+		return result ; 
+	}
+	
+	
 }

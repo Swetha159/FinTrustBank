@@ -1,11 +1,14 @@
 package com.bank.fintrustbank.dao;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 import com.bank.fintrustbank.model.AccountRequest;
 import com.bank.fintrustbank.util.QueryExecutor;
 import com.zoho.training.exceptions.TaskException;
 
+import querybuilder.OnClause;
 import querybuilder.Query;
 import querybuilder.QueryBuilder;
 
@@ -63,10 +66,28 @@ public class AccountRequestDAO {
 			return true;
 		}
 		return false;
-		
-				
 	}
 	
+	public List<Map<String, Object>> getAccountRequests(String branchId, String status) throws TaskException, SQLException
+	{
 	
+		Query getAccountRequest  = new QueryBuilder()
+				.select("person.person_id" , "person.name", "person.email","person.phone_number" , "person.dob" , "person.aadhar", "person.pan","person.address","person.created_at","person.modified_by","modifier.name","account_request.account_type")
+				.from("account_request")
+				.join("INNER", "account_request", new OnClause("account_request.person_id","=", "person.person_id"))
+				.join("INNER",  "person", "modifier" , new OnClause("person.modified_by","=","modifier.person_id"))
+				.where("request_status", "=", "ACCEPTED")
+				.and("branch_id", "=", "101")
+				.build();
+		System.out.println(getAccountRequest.getQuery());
+		List<Map<String, Object>> result = qe.executeQuery(getAccountRequest.getQuery(), getAccountRequest.getValues());
+		System.out.println(result);
+		if(result.isEmpty())
+		{
+			return null ; 
+		}
+		return result ; 
+				
+	}
 
 }
