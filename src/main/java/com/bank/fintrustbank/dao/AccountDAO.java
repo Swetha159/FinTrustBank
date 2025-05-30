@@ -1,5 +1,6 @@
 package com.bank.fintrustbank.dao;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,7 @@ public class AccountDAO {
 
 	QueryExecutor qe = new QueryExecutor();
 
-	public boolean addAccount(Account account) throws TaskException {
+	public boolean addAccount(Account account) throws TaskException, SQLException {
 
 		Query addAccountQuery = getInsertQuery(account);
 		System.out.println(addAccountQuery.getQuery());
@@ -50,7 +51,7 @@ public class AccountDAO {
 	}
 
 	public boolean updateStatus(Long accountNo, String status, Long modifiedAt, String sessionPersonId)
-			throws TaskException {
+			throws TaskException, SQLException {
 		Query updateStatusQuery = new QueryBuilder().update("account").set("status", status)
 				.set("modified_at", modifiedAt).set("modified_by", sessionPersonId).where("account_no", "=", accountNo)
 				.build();
@@ -63,7 +64,7 @@ public class AccountDAO {
 	}
 
 	public boolean updateBranch(Long accountNo, String branchId, Long modifiedAt, String sessionPersonId)
-			throws TaskException {
+			throws TaskException, SQLException {
 
 		Query updateStatusQuery = new QueryBuilder().update("account").set("branch_id", branchId)
 				.set("modified_at", modifiedAt).set("modified_by", sessionPersonId).where("account_no", "=", accountNo)
@@ -76,18 +77,26 @@ public class AccountDAO {
 		return false;
 
 	}
-
+	
 	public Double getBalance(long accountNo) throws TaskException, SQLException {
 
 		Query getBalanceQuery = new QueryBuilder().select("balance").from("account")
-				.where("account_no", "=", "accountNo").build();
-
+				.where("account_no", "=", accountNo).build();
+          System.out.println(accountNo);
 		System.out.println(getBalanceQuery.getQuery());
 		List<Map<String, Object>> result = qe.executeQuery(getBalanceQuery.getQuery(), getBalanceQuery.getValues());
 		System.out.println(result);
+		if(result.isEmpty())
+		{
+			return null ; 
+		}else
+		{
 		Map<String, Object> resultMap = result.get(0);
-		Double balance = (Double) resultMap.get("balance");
+		BigDecimal balanceDecimal = (BigDecimal) resultMap.get("balance");
+		double balance = balanceDecimal.doubleValue();
+
 		return balance;
+		}
 
 	}
 
@@ -104,9 +113,9 @@ public class AccountDAO {
 		return customerId;
 	}
 
-	public Query updateBalance(Long AccountNo, Double balance) throws TaskException {
+	public Query updateBalance(Long accountNo, Double balance) throws TaskException {
 		Query updateBalance = new QueryBuilder().update("account").set("balance", balance)
-				.where("account_no", "=", balance).build();
+				.where("account_no", "=", accountNo).build();
 
 		return updateBalance;
 	}
@@ -143,6 +152,21 @@ public class AccountDAO {
 		return result;
 		
 	}
+	
+	public List<Map<String,Object>>  getAccountNo(String personId) throws TaskException, SQLException
+	{
+		Query getAccountNo = new QueryBuilder()
+				.select("account_no")
+				.from("account")
+				.where("customer_id", "=", personId)
+				.build();
+		
+		List<Map<String, Object>> result = qe.executeQuery(getAccountNo .getQuery(), getAccountNo.getValues());
+		System.out.println(result);
+		return result;
+		
+	}
+	
 
 	
 }

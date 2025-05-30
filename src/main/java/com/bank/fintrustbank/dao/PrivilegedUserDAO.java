@@ -25,6 +25,24 @@ public class PrivilegedUserDAO {
 		return insertQuery;
 	}
 
-
-
+    public String getBranch(String adminId) throws TaskException, SQLException
+    {
+    	Query getBranch = new QueryBuilder()
+    			.select("branch_id")
+    			.from("privileged_user")
+    			.where("admin_id", "=", adminId)
+    			.build();
+    	
+    	System.out.println(getBranch.getQuery());
+		List<Map<String, Object>> result = qe.executeQuery(getBranch.getQuery(), getBranch.getValues());
+		Map<String,Object> resultMap= result.get(0);
+		String branchId = (String) resultMap.get("branch_id") ; 
+		
+		System.out.println(branchId);
+		if(branchId==null)
+		{
+			return null ; 
+		}
+		return branchId ; 
+    }
 }

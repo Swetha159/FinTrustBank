@@ -26,24 +26,33 @@ public class PersonDAO {
 
 		System.out.println(loginQuery.getQuery());
 		List<Map<String, Object>> result = qe.executeQuery(loginQuery.getQuery(), loginQuery.getValues());
-		System.out.println(result);
-		Map<String, Object> resultMap = result.get(0);
-		String personId = (String) resultMap.get("person_id");
-		String role = (String) resultMap.get("role");
-		String passwordHash = (String) resultMap.get("password");
-		String status = (String) resultMap.get("status");
-		if (Password.verifyPassword(password, passwordHash)) {
-			Person person = new Person();
-			person.setPersonId(personId);
-			person.setRole(role);
-			return person;
-		} else {
+		System.out.println(loginQuery.getValues());
+		System.out.println(result.toString());
+		if(!result.isEmpty()) {
+			Map<String, Object> resultMap = result.get(0);
+			String personId = (String) resultMap.get("person_id");
+			String role = (String) resultMap.get("role");
+			String name = (String) resultMap.get("name");
+			String passwordHash = (String) resultMap.get("password");
+			String status = (String) resultMap.get("status");
+			if (Password.verifyPassword(password, passwordHash)) {
+				Person person = new Person();
+				person.setPersonId(personId);
+				person.setRole(role);
+				person.setName(name);
+				person.setStatus(status);
+				return person;
+			} else {
+				return null;
+			}
+		}
+		else {
 			return null;
 		}
 
 	}
 
-	public boolean addNewCustomer(Person person) throws TaskException {
+	public boolean addNewCustomer(Person person) throws TaskException, SQLException {
 
 		Query addCustomerQuery = new QueryBuilder().insert("person")
 				.values(person.getPersonId(), person.getName(), person.getEmail(), person.getPhoneNumber(),
@@ -72,7 +81,7 @@ public class PersonDAO {
 		return insertQuery;
 	}
 
-	public boolean addPerson(Person person) throws TaskException {
+	public boolean addPerson(Person person) throws TaskException, SQLException {
 
 		Query addPersonQuery = new QueryBuilder().insert("person")
 				.values(person.getPersonId(), person.getName(), person.getEmail(), person.getPhoneNumber(),
@@ -97,7 +106,7 @@ public class PersonDAO {
 		return updateStatusQuery;
 	}
 
-	public boolean updatePerson(Person person) throws TaskException {
+	public boolean updatePerson(Person person) throws TaskException, SQLException {
 		List<String> excludeColumns = Arrays.asList("person_id", "password", "role", "created_at", "status");
 		Query updateQuery = EditUtil.update(person, "person", "person_id", excludeColumns);
 
@@ -122,7 +131,7 @@ public class PersonDAO {
 	}
 
 	public boolean updateStatus(String status, String personId, Long modifiedAt, String sessionPersonId)
-			throws TaskException {
+			throws TaskException, SQLException {
 
 		Query updateStatusQuery = getUpdateStatusQuery(personId, status, modifiedAt, sessionPersonId);
 

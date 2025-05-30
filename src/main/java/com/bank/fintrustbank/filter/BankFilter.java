@@ -45,8 +45,15 @@ public class BankFilter implements Filter {
             httpRequest.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
             return;
 		}
-	  
-	    	
+	    if ("/login".equals(endpoint) || "/account-request".equals(endpoint)) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        if (endpoint == null || endpoint.startsWith("/assets") || endpoint.startsWith("/css") || endpoint.startsWith("/js")) {
+            chain.doFilter(request, response);
+            return;
+        }
 	    if(endpointConfig.containsKey(endpoint))
 	    {
 	    	HttpSession session = httpRequest.getSession(false);

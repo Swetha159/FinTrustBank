@@ -1,0 +1,202 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  margin: 0;
+  padding: 20px;
+}
+
+.section {
+  max-width: 1100px;
+  margin: auto;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+  border-top: 6px solid #97144d;
+  margin-top: 50px;
+}
+
+.heading {
+  text-align: center;
+  color: #97144d;
+  margin-bottom: 30px;
+  font-size: 30px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #97144d;
+}
+
+.input-group select,
+.input-group input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.date-range {
+  display: flex;
+  gap: 20px;
+  align-items: flex-end;
+  margin-bottom: 20px;
+}
+
+.btn {
+  padding: 10px 20px;
+  background-color: #97144d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: #7b1040;
+}
+
+.statement-table-container {
+  overflow-x: auto;
+}
+
+.statement-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.statement-table th,
+.statement-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.statement-table th {
+  background-color: #f2f2f2;
+  color: #97144d;
+  font-weight: bold;
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.download-section {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.download-btn {
+  width: 200px;
+}
+body {
+  font-family: Arial, sans-serif;
+  background: #fdfbfc;
+  color: #333;
+}
+
+.section {
+  max-width: 90%;
+  margin: auto;
+  padding: 20px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  margin-top: 40px;
+}
+
+.heading {
+  text-align: center;
+  color: #97144d;
+  margin-bottom: 20px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.input-group input,
+.input-group select {
+  padding: 8px;
+  border: 1px solid #97144d;
+  border-radius: 6px;
+}
+
+.date-range {
+  display: flex;
+  gap: 20px;
+  align-items: flex-end;
+  margin-bottom: 20px;
+}
+
+.btn {
+  background-color: #97144d;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.btn:hover {
+  background-color: #7b103f;
+}
+
+.statement-table-container {
+  overflow-x: auto;
+}
+
+.statement-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.statement-table th,
+.statement-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.statement-table th {
+  background-color: #97144d;
+  color: white;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.download-section {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.download-btn {
+  background-color: #444;
+}
+

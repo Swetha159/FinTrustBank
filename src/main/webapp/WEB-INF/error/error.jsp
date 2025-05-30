@@ -12,6 +12,7 @@
     <h1>Error</h1>
     <p>${errorMessage != null ? errorMessage : "An unexpected error occurred."}</p>
     <br>
+    
     <a href="${pageContext.request.contextPath}/">Return to Home</a>
 </div>
 </body>

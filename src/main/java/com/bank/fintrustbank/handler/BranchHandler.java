@@ -38,9 +38,8 @@ public class BranchHandler implements HttpRequestHandler{
 			 if(path.equals("/branch"))
 			 {
 				 handleAddBranch(request, response);
-
 			 }
-			 }catch (IOException  | ServletException e) {
+			 }catch (IOException  | ServletException | SQLException e) {
 					e.printStackTrace();
 					throw new TaskException(e.getMessage(), e);
 				}
@@ -107,20 +106,19 @@ public class BranchHandler implements HttpRequestHandler{
 		 {
 			 handleUpdateBranch(request,response);
 		 }
-		 }catch (IOException  | ServletException e) {
+		 }catch (IOException  | ServletException | SQLException e) {
 				e.printStackTrace();
 				throw new TaskException(e.getMessage(), e);
 			}
 	 }
 
-	private boolean handleUpdateBranch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, TaskException {
+	private boolean handleUpdateBranch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, TaskException, SQLException {
 		
 
 		HttpSession session = request.getSession(false);
 		if (session == null || session.getAttribute("personId") == null) {
 			request.setAttribute("errorMessage", "session expired");
 			request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
-
 		}
 		String sessionPersonId = (String) session.getAttribute("personId");
 		BufferedReader reader = request.getReader();
@@ -133,7 +131,7 @@ public class BranchHandler implements HttpRequestHandler{
 		
 	}
 
-	private boolean handleAddBranch(HttpServletRequest request, HttpServletResponse response) throws  IOException, ServletException, TaskException {
+	private boolean handleAddBranch(HttpServletRequest request, HttpServletResponse response) throws  IOException, ServletException, TaskException, SQLException {
 	
 
 		HttpSession session = request.getSession(false);

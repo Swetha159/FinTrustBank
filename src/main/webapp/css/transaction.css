@@ -1,0 +1,157 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  margin: 0;
+  padding: 20px;
+}
+
+.section {
+  max-width: 500px;
+  margin: auto;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+  border-top: 6px solid #97144d;
+  padding-top : 10px;
+  margin-top :150px;
+}
+
+.heading {
+  text-align: center;
+  color: #97144d;
+  margin-bottom: 25px;
+  font-size: 28px;
+  
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: #97144d;
+}
+.input-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.input-group label {
+  position: absolute;
+  left: 12px;
+  top: 14px;
+  color: #888;
+  font-size: 16px;
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+
+.input-group input,
+.input-group select {
+  width: 100%;
+  padding: 20px 10px 6px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  background: transparent;
+  color: #333;
+  box-sizing: border-box;
+}
+
+.input-group a {
+  color: #97144d;
+  text-decoration: none;
+  display: block;
+  margin-top: 8px;
+}
+
+.input-group select {
+  color: #888;
+  padding: 0.8rem;
+  
+}
+
+.input-group input:focus + label,
+.input-group input:valid + label {
+  top: -8px;
+  left: 8px;
+  font-size: 14px;
+  background: white;
+  padding: 0 4px;
+  color: #97144d;
+}
+
+.gpay-amount {
+  align-items: center;
+  border: 2px solid #97144d;
+  border-radius: 8px;
+  padding: 10px;
+  background-color: white;
+  max-width: 300px;
+  margin: 0 auto 20px auto; /* center the container horizontally */
+}
+
+.gpay-amount .currency-symbol {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  font-size: 40px;
+  color: #97144d;
+  font-weight: bold;
+  pointer-events: none;
+}
+
+.gpay-amount input {
+ width: 100%;
+  padding-left: 40px;
+  font-size: 40px;
+  font-weight: bold;
+  border: none;
+  padding-bottom: 15px;
+  color: black;
+  outline: none;
+  background: transparent;
+}
+
+textarea {
+  resize: vertical;
+  font-family: inherit;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #97144d;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+  background-color: #7b1040;
+}
+
+/* Hide IFSC input initially */
+#ifsc-group {
+  display: none;
+}
+
+
+.dropdown-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 5px;
+}
+

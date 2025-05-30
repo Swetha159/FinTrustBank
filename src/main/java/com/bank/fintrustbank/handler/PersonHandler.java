@@ -39,7 +39,7 @@ public class PersonHandler implements HttpRequestHandler  {
 		 handleUpdatePerson(request,response);
 	 }
 	
-	 }catch (IOException  | ServletException  e) {
+	 }catch (IOException  | ServletException | SQLException  e) {
 			e.printStackTrace();
 			throw new TaskException(e.getMessage(), e);
 		}
@@ -131,7 +131,7 @@ public class PersonHandler implements HttpRequestHandler  {
 		}
 	}
 
-	private boolean handleUpdateStatus(HttpServletRequest request, HttpServletResponse response) throws IOException, TaskException {
+	private boolean handleUpdateStatus(HttpServletRequest request, HttpServletResponse response) throws IOException, TaskException, SQLException {
 				
 		HttpSession session = request.getSession(false);
 		String sessionPersonId = (String) session.getAttribute("personId");
@@ -205,7 +205,7 @@ public class PersonHandler implements HttpRequestHandler  {
 		
 	}
 
-	private boolean handleUpdatePerson(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, TaskException {
+	private boolean handleUpdatePerson(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, TaskException, SQLException {
 		
 		HttpSession session = request.getSession(false);
 		String sessionPersonId = (String) session.getAttribute("personId");

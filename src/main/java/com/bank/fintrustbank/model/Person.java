@@ -1,7 +1,9 @@
 package com.bank.fintrustbank.model;
 
-import java.sql.Date;
 
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
@@ -14,6 +16,8 @@ public class Person {
     private String role;
     private String password;
     private String status;
+    
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private  Date dob;
     private Long aadhar;
     private String pan;
@@ -22,7 +26,25 @@ public class Person {
     private Long modifiedAt;
     private String modifiedBy;
 
-
+   public static final String TABLE_NAME ="person";
+    public static final  String PERSON_ID = "person_id";
+    public static final  String NAME = "name";
+    public static final String EMAIL = "email";
+    public static final  String PHONE_NUMBER = "phone_number";
+    public static final  String ROLE = "role";
+    public static final  String PASSWORD = "password";
+    public static final  String STATUS = "status";
+    public static final  String DOB = "dob";
+    public static final  String AADHAR = "aadhar";
+    public static final  String PAN = "pan";
+    public static final  String ADDRESS = "address";
+    public static final  String CREATED_AT = "created_at";
+    public static final  String MODIFIED_AT = "modified_at";
+    public static final  String MODIFIED_BY = "modified_by";
+    
+    
+    
+    
     public String getPersonId() {
         return personId;
     }
@@ -79,11 +101,11 @@ public class Person {
         this.status = status;
     }
 
-    public java.sql.Date getDob() {
+    public Date getDob() {
         return dob;
     }
 
-    public void setDob(java.sql.Date dob) {
+    public void setDob(Date dob) {
         this.dob = dob;
     }
 

@@ -6,13 +6,13 @@ public class AccountRequest {
     private String accountType; 
     private String branchId;
     private String requestStatus;
-    private long createdAt ; 
-    private long modifiedAt ; 
+    private Long createdAt ; 
+    private Long modifiedAt ; 
     private String modifiedBy ; 
         public AccountRequest() {}
 
     public AccountRequest(String personId, 
-                          String accountType, String branchId , String requestStatus , Long createdAt , Long modifiedAt , String modifiedBy) {
+                           String branchId ,String accountType, String requestStatus , Long createdAt , Long modifiedAt , String modifiedBy) {
         this.personId = personId;
         this.accountType= accountType;
         this.branchId = branchId;
@@ -63,7 +63,7 @@ public class AccountRequest {
 		this.modifiedBy = modifiedBy;
 	}
 
-	public long getModifiedAt() {
+	public Long getModifiedAt() {
 		return modifiedAt;
 	}
 
@@ -71,7 +71,7 @@ public class AccountRequest {
 		this.modifiedAt = modifiedAt;
 	}
 
-	public long getCreatedAt() {
+	public Long getCreatedAt() {
 		return createdAt;
 	}
 

@@ -52,7 +52,7 @@ public class AccountRequestDAO {
 				
 	}
 	
-	public boolean  rejectRequest(String personId) throws TaskException
+	public boolean  rejectRequest(String personId) throws TaskException, SQLException
 	{
 		Query rejectRequestQuery = new QueryBuilder()
 									.update("account_request")
@@ -76,8 +76,8 @@ public class AccountRequestDAO {
 				.from("account_request")
 				.join("INNER", "account_request", new OnClause("account_request.person_id","=", "person.person_id"))
 				.join("INNER",  "person", "modifier" , new OnClause("person.modified_by","=","modifier.person_id"))
-				.where("request_status", "=", "ACCEPTED")
-				.and("branch_id", "=", "101")
+				.where("request_status", "=", status)
+				.and("branch_id", "=",  branchId)
 				.build();
 		System.out.println(getAccountRequest.getQuery());
 		List<Map<String, Object>> result = qe.executeQuery(getAccountRequest.getQuery(), getAccountRequest.getValues());

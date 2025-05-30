@@ -10,6 +10,17 @@ public class Branch {
     private long modifiedAt;
     private String  modifiedBy;
 
+	 public static final String TABLE_NAME ="branch";
+	 public static final String BRANCH_ID ="branch_id";
+	 public static final String MANAGER_ID ="manager_id";
+	 public static final String IFSC_CODE ="ifsc_code";
+	 public static final String LOCATION ="location";
+	 public static final String CREATED_AT ="created_at";
+	    public static final String MODIFIED_AT ="modified_at";
+	    public static final String MODIFIED_BY ="modified_by";
+    
+    
+    
    
     public Branch() {}
 

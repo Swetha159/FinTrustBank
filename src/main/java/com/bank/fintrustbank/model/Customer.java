@@ -12,6 +12,9 @@ public class Customer {
 	 private long createdAt ; 
 	 private long modifiedAt; 
 	 private long modifiedBy;
+	 
+	
+	    
 	
  public long getCustomerId() {
 		return customerId;

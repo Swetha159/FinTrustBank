@@ -1,57 +1,93 @@
 
-  /login:
-    handler: LoginHandler
-
-  /new-account:
-    handler: AccountHandler
-
-  /dashboard:
-    handler: CustomerDashboardHandler
-
-  /lasttransactions:
-    handler: TransactionHistoryHandler
-
-  /overallbalance:
-    handler: AccountBalanceHandler
-
-  /totalcredits:
-    handler: CreditTransactionHandler
-
-  /totaldebits:
-    handler: DebitTransactionHandler
-
-  /myprofile:
-    handler: CustomerProfileHandler
-
-  /branch:
-    handler: BranchDetailsHandler
-            
-  /nominee:
-    handler: NomineeHandler
-
-  /accounts:
-    handler: AccountListHandler
-
-  /statement:
-    handler: AccountStatementHandler
-
-  /admin:
-    handler: AdminDashboardHandler
-
-  /account:
-    handler: AccountDetailsHandler
-
   /transaction:
     handler: TransactionHandler
 
-  /credentials:
-    handler: CredentialsHandler
+  /deposit:
+    handler: TransactionHandler
 
-  /request:
-    handler: ServiceRequestHandler
+  /withdraw:
+    handler: TransactionHandler
 
-  /branchaccount:
-    handler: BranchAccountHandler
+  /transactions:
+    handler: TransactionHandler
 
-  /account-request:handler: NewAccountHandler
+  /history:
+    handler: TransactionHandler
 
+  /history/creditcount:
+    handler: TransactionHandler
+
+  /history/creditcount/debitcount:
+    handler: TransactionHandler
+
+  /history/creditcount/debitcount/superadmin:
+    handler: SuperAdminHandler
+
+  /person:
+    handler: PersonHandler
+
+  /customers:
+    handler: PersonHandler
+
+  /customer/details:
+    handler: PersonHandler
+
+  /login:
+    handler: LoginHandler
+
+  /account-request:
+    handler: FirstAccountHandler
+
+  /account-request/approval:
+    handler: FirstAccountHandler
+
+  /admin/firstaccount:
+    handler: FirstAccountHandler
+
+  /branch:
+    handler: BranchHandler
+
+  /branches:
+    handler: BranchHandler
+
+  /branchdetails:
+    handler: BranchHandler
+
+  /admin:
+    handler: AdminHandler
+
+  /customer/additional-account:
+    handler: AdditionalAccountHandler
+
+  /admin/additional-account:
+    handler: AdditionalAccountHandler
+
+  /account/status:
+    handler: AccountHandler
+
+  /allaccounts:
+    handler: AccountHandler
+
+  /accounts:
+    handler: AccountHandler
+
+  /admin/dashboard:
+    handler: DashboardHandler
+
+  /superadmin/dashboard:
+    handler: DashboardHandler
+
+  /customer/dashboard:
+    handler: DashboardHandler
+
+  /creditcount:
+    handler: TransactionHandler
+
+  /debitcount:
+    handler: TransactionHandler
+
+  /accountno:
+    handler: AccountHandler
+
+  /balance:
+    handler: AccountHandler

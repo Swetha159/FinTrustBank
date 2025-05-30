@@ -1,6 +1,7 @@
 package com.bank.fintrustbank.dao;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -9,16 +10,15 @@ import com.bank.fintrustbank.model.Branch;
 import com.bank.fintrustbank.util.QueryExecutor;
 import com.zoho.training.exceptions.TaskException;
 
-import querybuilder.Condition;
+import querybuilder.OnClause;
 import querybuilder.Query;
 import querybuilder.QueryBuilder;
-import querybuilder.OnClause;
 
 public class BranchDAO {
 
 	QueryExecutor qe = new QueryExecutor();
 
-	public boolean addBranch(Branch branch) throws TaskException {
+	public boolean addBranch(Branch branch) throws TaskException, SQLException {
 
 		Query insertQuery = new QueryBuilder()
 				.insert("branch").values(branch.getBranchId(), branch.getManagerId(), branch.getIfscCode(),
@@ -33,7 +33,7 @@ public class BranchDAO {
 		return false;
 	}
 
-	public boolean updateBranch(Branch branch) throws TaskException {
+	public boolean updateBranch(Branch branch) throws TaskException, SQLException {
 		List<String> excludeColumns = Arrays.asList("branch_id", "ifsc", "created_at", "manager_id");
 		Query updateQuery = EditUtil.update(branch, "branch", "branch_id", excludeColumns);
 
@@ -107,6 +107,32 @@ public class BranchDAO {
 		}
 		return result;
 
+	}
+	
+	
+	
+	public List<Branch> getAllBranches() throws TaskException, SQLException
+	{
+		Query getAllBranches = new QueryBuilder()
+				.select("branch_id","location")
+				.from("branch").build();
+		List<Map<String, Object>> result = qe.executeQuery(getAllBranches.getQuery(), getAllBranches.getValues());
+		
+		   List<Branch> branches = new ArrayList<>();
+		   
+		    for (Map<String, Object> row : result) {
+		        String location = (String) row.get("location");
+		        String branchId = (String) row.get("branch_id");
+		        Branch branch = new Branch();
+		        branch.setLocation(location);
+		        branch.setBranchId(branchId);
+		        branches.add(branch);
+		    }
+
+		    return branches;
+
+		
+				
 	}
 
 

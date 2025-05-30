@@ -18,12 +18,12 @@ import querybuilder.Query;
 
 public class QueryExecutor {
 	private final DataSource dataSource = DataSourceHolder.getInstance().getDataSource();
-	private Connection connection;
+	private Connection connection ;
 
-	public int execute(String query, List<Object> values) {
+	public int execute(String query, List<Object> values) throws SQLException {
 		int rowAffected = 0;
-		try (Connection conn = (connection != null) ? connection : dataSource.getConnection();
-				PreparedStatement statement = conn.prepareStatement(query)) {
+		Connection conn = (connection != null) ? connection : dataSource.getConnection();
+		try (PreparedStatement statement = conn.prepareStatement(query)) {
 
 			setParameters(statement, values);
 			
@@ -32,6 +32,10 @@ public class QueryExecutor {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}finally {
+	        if (connection == null) {
+	            conn.close(); // close only if not in transaction
+	        }
 		}
 		return rowAffected;
 	}
@@ -63,9 +67,8 @@ public class QueryExecutor {
 
 	public List<Map<String, Object>> executeQuery(String query, List<Object> values) throws SQLException {
 		List<Map<String, Object>> resultList = new ArrayList<>();
-
-		try (Connection conn = (connection != null) ? connection : dataSource.getConnection();
-				PreparedStatement statement = conn.prepareStatement(query)) {
+		Connection conn = (connection != null) ? connection : dataSource.getConnection();
+		try (PreparedStatement statement = conn.prepareStatement(query)) {
 
 			setParameters(statement, values);
 			try (ResultSet resultSet = statement.executeQuery()) {
@@ -89,14 +92,18 @@ public class QueryExecutor {
 			catch (SQLException e) {
 				e.printStackTrace();
 			}
-
+			finally {
+		        if (connection == null) {
+		            conn.close(); // close only if not in transaction
+		        }
+			}
 			return resultList;
 		}
 
 	}
 
 	public void beginTransaction() throws SQLException {
-		if (connection == null && connection.isClosed()) {
+		if (connection == null || connection.isClosed()) {
 			connection = dataSource.getConnection();
 			connection.setAutoCommit(false);
 		}

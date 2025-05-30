@@ -22,6 +22,8 @@
 	<classpathentry kind="lib" path="/home/swetha-23428/Downloads/jackson-datatype-jsr310-2.18.3.jar"/>
 	<classpathentry kind="lib" path="/home/swetha-23428/Documents/Property.jar"/>
 	<classpathentry kind="lib" path="/home/swetha-23428/Documents/TaskException.jar"/>
+	<classpathentry kind="lib" path="/home/swetha-23428/Documents/standard.jar"/>
+	<classpathentry kind="lib" path="/home/swetha-23428/Documents/jstl.jar"/>
 	<classpathentry kind="lib" path="/home/swetha-23428/Desktop/QueryBuilder.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

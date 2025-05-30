@@ -18,11 +18,12 @@ public class TransactionService {
 	private final QueryExecutor qe = new QueryExecutor();
     private static final Long BANK_ACCOUNT_NO = 123456789012L ;
 
-	public boolean processtransaction(Transaction debit, boolean otherBank) throws TaskException, SQLException {
+	public boolean processTransaction(Transaction debit, boolean otherBank) throws TaskException, SQLException {
 
 		try {
 
 			Double senderBalance = accountDAO.getBalance(debit.getAccountNo());
+System.out.println(debit.getAccountNo());
 
 			Double senderBalanceAfterTransaction = senderBalance - debit.getAmount();
 
@@ -38,12 +39,11 @@ public class TransactionService {
 			Query updateBalanceQuery = accountDAO.updateBalance(debit.getAccountNo(), senderBalanceAfterTransaction);
 			qe.execute(updateBalanceQuery.getQuery(), updateBalanceQuery.getValues());
 			if (otherBank) {
-				debit.setDescription("OTHER BANK TRANSACTION " + debit.getDescription());
+				debit.setDescription("OTHER BANK TRANSACTION  IFSC CODE : " + debit.getDescription());
 				debit.setTransactionStatus("SUCCESS");
 			}
 			Query senderTransactionInsert = transactionDAO.insertTransaction(debit);
 			qe.execute(senderTransactionInsert.getQuery(), senderTransactionInsert.getValues());
-
 			qe.commitTransaction();
 		} catch (TaskException | SQLException e) {
 			qe.rollbackTransaction();
@@ -62,7 +62,7 @@ public class TransactionService {
 				String creditCustomerId = accountDAO.getCustomerId(debit.getTransactionAccountNo());
 				Transaction credit = new Transaction(RowIdGenerator.generateRowId(),
 						TransactionIdGenerator.generateTransactionId(timeStamp, debit.getTransactionAccountNo()),
-						creditCustomerId, debit.getTransactionAccountNo(), debit.getAccountNo(), timeStamp,
+						creditCustomerId,  debit.getAccountNo(),debit.getTransactionAccountNo(), timeStamp,
 						debit.getAmount(), "SUCCESS", "CREDIT", receiverBalanceAfterTransaction, debit.getDescription(),
 						debit.getTransactionBy());
 

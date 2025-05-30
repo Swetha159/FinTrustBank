@@ -12,7 +12,15 @@ public class Account {
 	private String modifiedBy;
 	
 	
-	
+    public static final String TABLE_NAME ="account";
+	 public static final String ACCOUNT_NO ="account_no";
+	 public static final String CUSTOMER_ID = "customer_id";
+	 public static final String BRANCH_ID = "branch_id";
+	 public static final String ACCOUNT_TYPE = "account_type";
+	 public static final String BALANCE = "balance";
+	 public static final String CREATED_AT ="created_at";
+	    public static final String MODIFIED_AT ="modified_at";
+	    public static final String MODIFIED_BY ="modified_by";
 	
 	
 	public long getAccountNo() {

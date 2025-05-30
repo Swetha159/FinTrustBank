@@ -1,0 +1,87 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #97144d;
+  color: white;
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.left-section {
+  display: flex;
+  align-items: center;
+}
+
+.left-section .logo {
+  height: 40px;
+  margin-right: 15px;
+}
+
+.menu-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 22px;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+.left-section h4 {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: 1px;
+}
+
+.right-section {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  height: 24px;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  color: #97144d;
+  padding: 5px 10px;
+  border-radius: 20px;
+}
+
+.profile-pic {
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+}
+
+.user-name {
+  font-weight: bold;
+  margin: 0;
+}
+
+.user-id {
+  margin: 0;
+  font-size: 11px;
+}
+.dashboard-header.shifted {
+  margin-left: 220px; /* same as sidebar width */
+  transition: margin-left 0.3s ease;
+}
+

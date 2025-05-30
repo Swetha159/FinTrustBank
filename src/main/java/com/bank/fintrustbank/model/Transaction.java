@@ -1,5 +1,8 @@
 package com.bank.fintrustbank.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class Transaction {
 	
 	private String rowId;
@@ -15,6 +18,22 @@ public class Transaction {
 	private String description ;
 	private String transactionBy ; 
 	
+	
+	 public static final String TABLE_NAME ="transaction";
+	 public static final String ROW_ID ="row_id";
+	 public static final String ACCOUNT_NO ="account_no";
+	 public static final String AMOUNT ="amount";
+	 public static final String AVAILABLE_BALANCE  ="available_balance";
+	 public static final String  CUSTOMER_ID="customer_id";
+	 public static final String DATE_TIME  ="date_time";
+	 public static final String DESCRIPTION ="description";
+	 public static final String TRANSACTION_BY ="transaction_by";
+	 public static final String TRANSACTION_STATUS ="transaction_status";
+	 public static final String TRANSACTION_ACCOUNT_NO ="transaction_account_no";
+	 public static final String TRANSACTION_TYPE ="transaction_type";
+	
+	    public Transaction() {}
+		
 	public Transaction(String rowId , long transactionId, String customerId, long transactionAccountNo, long accountNo,
 			long dateTime, double amount , String transactionStatus, String transactionType, Double availableBalance, String description,
 			String transactionBy) {
@@ -32,10 +51,6 @@ public class Transaction {
 		this.transactionStatus = transactionStatus ; 
 		this.transactionAccountNo = transactionAccountNo;
 		this.transactionType = transactionType;
-		
-		
-		
-		
 	}
 
 	public long getTransactionId() {
@@ -60,7 +75,7 @@ public class Transaction {
 		return transactionAccountNo;
 	}
 	public void setTransactionAccountNo(long transactionAccountNo) {
-		transactionAccountNo = transactionAccountNo;
+		this.transactionAccountNo = transactionAccountNo;
 	}
 	public long getDateTime() {
 		return dateTime;

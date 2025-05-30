@@ -66,9 +66,4 @@ public class SuperAdminHandler implements HttpRequestHandler {
 
 
 
-
-	public void handleEditAdmin(HttpServletRequest request, HttpServletResponse response) {
-
-	}
-
 }

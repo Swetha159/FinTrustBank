@@ -7,6 +7,14 @@ public class PrivilegedUser {
     private Long modifiedAt;
     private String modifiedBy;
 
+    public static final String TABLE_NAME ="privileged_user";
+    public static final String ADMIN_ID  ="admin_id";
+    public static final String BRANCH_ID ="branch_id";
+    public static final String CREATED_AT ="created_at";
+    public static final String MODIFIED_AT ="modified_at";
+    public static final String MODIFIED_BY ="modified_by";
+    
+    
     // Constructors
     public PrivilegedUser() {
     }
