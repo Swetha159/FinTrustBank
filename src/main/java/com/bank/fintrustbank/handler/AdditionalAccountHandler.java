@@ -37,8 +37,32 @@ public class AdditionalAccountHandler implements HttpRequestHandler {
 		try
 		{
 		if (path.equals("/admin/additional-account")) {
-				handleAdminCreateAdditionalAccount(request, response);
-		
+			 HttpSession session = request.getSession(false); 
+			    if (session == null || session.getAttribute("personId") == null) {
+			    	 request.setAttribute("errorMessage", "session expired");
+		             request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
+			     
+			    }
+
+			List<Branch> branches = new BranchDAO().getAllBranches();
+			System.out.println(branches.toString());
+			request.setAttribute("branches", branches);
+		        request.setAttribute("page" , "additional-account");
+		        
+		         if(session.getAttribute("role").equals("ADMIN"))
+				{
+					request.getRequestDispatcher("/bank/admin/dashboard").forward(request, response);
+				}
+				else if(session.getAttribute("role").equals("SUPERADMIN"))
+				{
+					request.getRequestDispatcher("/bank/superadmin/dashboard").forward(request, response);
+				}
+				else
+				{
+					request.setAttribute("errorMessage", "Access Restricted");
+					request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
+				}
+
 			}
 		else if (path.equals("/customer/additional-account")) {
 			List<Branch> branches = new BranchDAO().getAllBranches();
@@ -89,7 +113,10 @@ public class AdditionalAccountHandler implements HttpRequestHandler {
 		    }
 
 		    String sessionPersonId = (String) session.getAttribute("personId");
-
+		   
+		    
+		   
+		   
 		  
 		    String jsonBody = new BufferedReader(request.getReader())
 		            .lines()
@@ -97,9 +124,20 @@ public class AdditionalAccountHandler implements HttpRequestHandler {
 
 		    JsonNode rootNode = mapper.readTree(jsonBody);
 
+		    
 		    String branchId = rootNode.path("branch_id").asText();
 		    String accountType = rootNode.path("account_type").asText();
-		    Account account = AccountFactory.createAccount(sessionPersonId, branchId,sessionPersonId, accountType);
+		    String role =(String) session.getAttribute("role") ; 
+		    String customerId;
+		    if(role=="ADMIN" ||role =="SUPERADMIN" )
+		    {
+		    	customerId = rootNode.path("person_id").asText();
+		    }
+		    else
+		    {
+		    	customerId = sessionPersonId ; 
+		    }
+		    Account account = AccountFactory.createAccount(sessionPersonId, branchId,customerId, accountType);
 		    return accountDAO.addAccount(account);
 		
 	}

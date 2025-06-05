@@ -1,24 +1,40 @@
 package com.bank.fintrustbank.enums;
 
-public enum PrivilegedUserField {
-	  ADMIN_ID("admin_id"),
-	    BRANCH_ID("branch_id"),
-	    CREATED_AT("created_at"),
-	    MODIFIED_AT("modified_at"),
-	    MODIFIED_BY("modified_by");
+import querybuilder.Column;
 
-	    private final String columnName;
+public enum PrivilegedUserField implements Column {
+    ADMIN_ID("admin_id"),
+    BRANCH_ID("branch_id"),
+    CREATED_AT("created_at"),
+    MODIFIED_AT("modified_at"),
+    MODIFIED_BY("modified_by");
 
-	    PrivilegedUserField(String columnName) {
-	        this.columnName = columnName;
-	    }
+    private static final String TABLE_NAME = "privileged_user";  // Adjust if needed
 
-	    public String getColumnName() {
-	        return columnName;
-	    }
+    private final String column;
 
-	    @Override
-	    public String toString() {
-	        return columnName;
-	    }
+    PrivilegedUserField(String columnName) {
+        this.column = columnName;
+    }
+
+    @Override
+    public String getTableName() {
+        return TABLE_NAME;
+    }
+
+    @Override
+    public String getColumnName() {
+        return column;
+    }
+
+    @Override
+    public String getQualifiedName() {
+        return getTableName() + "." + getColumnName();
+    }
+
+    @Override
+    public String toString() {
+        return getQualifiedName();
+    }
+
 }

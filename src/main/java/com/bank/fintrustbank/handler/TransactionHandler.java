@@ -72,28 +72,69 @@ public class TransactionHandler implements HttpRequestHandler {
 				handleViewTransaction(request, response);
 
 			} else if (path.equals("/history")) {
-				
+				HttpSession session = request.getSession(false);
+				if (session == null || session.getAttribute("personId") == null) {
+					request.setAttribute("errorMessage", "session expired");
+					request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
+
+				}
 				List<Map<String, Object>> transactions = 	handleTransactionHistory(request, response);
 				System.out.println(transactions.toString());
 				TimeFormatter.convertMillisToDateTime(transactions , "date_time");
-				System.out.println(transactions.toString());
+				
 				boolean hasNext = transactions.size() == 11;
 				request.setAttribute("hasNext", hasNext);
 				request.setAttribute("transaction_list", transactions);
 				request.setAttribute("page" , "history");
-				  request.getRequestDispatcher("/bank/customer/dashboard").forward(request, response);
+				System.out.println(session.getAttribute("role"));
+				if(session.getAttribute("role").equals("CUSTOMER"))
+				{
+					request.getRequestDispatcher("/bank/customer/dashboard").forward(request, response);
+				}
+				else if(session.getAttribute("role").equals("ADMIN"))
+				{
+					request.getRequestDispatcher("/bank/admin/dashboard").forward(request, response);
+				}
+				else if(session.getAttribute("role").equals("SUPERADMIN"))
+				{
+					request.getRequestDispatcher("/bank/superadmin/dashboard").forward(request, response);
+				}
+				else
+				{
+					request.setAttribute("errorMessage", "Access Restricted");
+					request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
+				}
 
 			} else if (path.equals("/transaction")) {
-				
+				HttpSession session = request.getSession(false);
+				if (session == null || session.getAttribute("personId") == null) {
+					request.setAttribute("errorMessage", "session expired");
+					request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
+
+				}
 				request.setAttribute("page" , "transaction");
-		        request.getRequestDispatcher("/bank/customer/dashboard").forward(request, response);
-		        
+				if(session.getAttribute("role").equals("CUSTOMER"))
+				{
+					request.getRequestDispatcher("/bank/customer/dashboard").forward(request, response);
+				}
+				else if(session.getAttribute("role").equals("ADMIN"))
+				{
+					request.getRequestDispatcher("/bank/admin/dashboard").forward(request, response);
+				}
+				else if(session.getAttribute("role").equals("SUPERADMIN"))
+				{
+					request.getRequestDispatcher("/bank/superadmin/dashboard").forward(request, response);
+				}
+				else
+				{
+					request.setAttribute("errorMessage", "Access Restricted");
+					request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
+				}
 			}
 		} catch (IOException | SQLException | TaskException | ServletException e) {
 			e.printStackTrace();
 			throw new TaskException(e.getMessage(), e);
 		}
-
 	}
 
 	private void handleCreditCount(HttpServletRequest request, HttpServletResponse response)
@@ -109,7 +150,6 @@ public class TransactionHandler implements HttpRequestHandler {
 		jsonResponse.put("credit", creditCount);
 		response.setContentType("application/json");
 		mapper.writeValue(response.getWriter(), jsonResponse);
-
 
 	}
 
@@ -176,7 +216,7 @@ public class TransactionHandler implements HttpRequestHandler {
 		  String startDateParam = request.getParameter("start_date");
 		  String endDateParam = request.getParameter("end_date");
 		  
-		
+		System.out.println("hereeee"+startDateParam +endDateParam );
 
 		  
 			/*
@@ -184,7 +224,7 @@ public class TransactionHandler implements HttpRequestHandler {
 			 * rootNode.path("end_date");
 			 */
 
-		   if (startDateParam ==null && endDateParam ==null) {
+		   if ((startDateParam ==null || startDateParam.isEmpty()) && (endDateParam ==null) || endDateParam.isEmpty()) {
 			   long beforeFiveDaysMillis = ZonedDateTime.now()
 					    .minusDays(5)
 					    .withHour(0)
@@ -222,9 +262,7 @@ public class TransactionHandler implements HttpRequestHandler {
 			  }
 		   
 		   return (List<Map<String, Object>>) dao.getTransactionHistory(accountNo ,offset ,startDate ,endDate ,  transactionStatus );
-		   
-		   
-		   
+		
 			
 		}
 

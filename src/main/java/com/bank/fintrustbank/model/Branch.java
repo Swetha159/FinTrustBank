@@ -6,8 +6,8 @@ public class Branch {
     private String managerId;
     private String ifscCode;
     private String location;
-    private long createdAt;
-    private long modifiedAt;
+    private Long createdAt;
+    private Long modifiedAt;
     private String  modifiedBy;
 
 	 public static final String TABLE_NAME ="branch";
@@ -25,7 +25,7 @@ public class Branch {
     public Branch() {}
 
     public Branch(String branchId, String managerId, String ifscCode, String location,
-                  long createdAt, long modifiedAt, String modifiedBy) {
+                  Long createdAt, Long modifiedAt, String modifiedBy) {
         this.setBranchId(branchId);
         this.setManagerId(managerId);
         this.setIfscCode(ifscCode);
@@ -43,19 +43,19 @@ public class Branch {
 		this.modifiedBy = modifiedBy;
 	}
 
-	public long getModifiedAt() {
+	public Long getModifiedAt() {
 		return modifiedAt;
 	}
 
-	public void setModifiedAt(long modifiedAt) {
+	public void setModifiedAt(Long modifiedAt) {
 		this.modifiedAt = modifiedAt;
 	}
 
-	public long getCreatedAt() {
+	public Long getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(long createdAt) {
+	public void setCreatedAt(Long createdAt) {
 		this.createdAt = createdAt;
 	}
 

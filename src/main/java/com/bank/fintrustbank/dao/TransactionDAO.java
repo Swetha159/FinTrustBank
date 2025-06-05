@@ -23,7 +23,7 @@ public class TransactionDAO {
 
 	public Query insertTransaction(Transaction transaction) throws TaskException {
 
-		Query insertQuery = new QueryBuilder().insert("transaction")
+		Query insertQuery = new QueryBuilder().insert(TransactionField.ROW_ID)
 				.values(transaction.getTransactionId(), transaction.getCustomerId(), transaction.getAccountNo(),
 						transaction.getTransactionAccountNo(), transaction.getDateTime(), transaction.getAmount(),
 						transaction.getTransactionStatus(), transaction.getTransactionType(),
@@ -33,15 +33,12 @@ public class TransactionDAO {
 
 	}
 
-	public Query updateTransactionStatus(String rowId, String status ) throws TaskException {
+	
 
-	         return updateTransactionStatus(rowId, status ,TransactionField.ROW_ID.getColumnName() ,TransactionField.TRANSACTION_STATUS.getColumnName());
-	}
+	public Query updateTransactionStatus(String rowId, String status) throws TaskException {
 
-	public Query updateTransactionStatus(String rowId, String status , String rowIdColumn , String statusColumn) throws TaskException {
-
-		Query updateStatus = new QueryBuilder().update("transaction").set(statusColumn, status)
-				.where(rowIdColumn, "=", rowId).build();
+		Query updateStatus = new QueryBuilder().update(TransactionField.ROW_ID).set(TransactionField.TRANSACTION_STATUS, status)
+				.where(TransactionField.ROW_ID, "=", rowId).build();
 
 		return updateStatus;
 	}
@@ -49,9 +46,9 @@ public class TransactionDAO {
 	public Object getTransactions(String accountNo) throws TaskException, SQLException {
 
 		Query getAllTransaction = new QueryBuilder()
-				.select("transaction_id,transaction_account_no", "date_time", "amount", "transaction_type",
-						"available_balance")
-				.from("transaction").where("account_no", "=", accountNo).and("transaction_status", "=", "SUCCESS")
+				.select(TransactionField.TRANSACTION_ID,TransactionField.ACCOUNT_NO, TransactionField.DATE_TIME,TransactionField.AMOUNT, TransactionField.TRANSACTION_TYPE,
+						TransactionField.AVAILABLE_BALANCE)
+				.from(TransactionField.ROW_ID).where(TransactionField.ACCOUNT_NO, "=", accountNo).and(TransactionField.TRANSACTION_STATUS, "=", "SUCCESS")
 				.build();
 
 		List<Map<String, Object>> result = qe.executeQuery(getAllTransaction.getQuery(), getAllTransaction.getValues());
@@ -82,13 +79,13 @@ public class TransactionDAO {
 
 		Query getCreditCount= new QueryBuilder()
 				.select()
-				.count("transaction_id","credit_count")
-				.from("transaction")
-				.where("account_no","=",accountNo)
-//				.and("transaction_type", "IN", "(\"CREDIT\",\"DEPOSIT\")")
-				.and("date_time",">=", startOfWeekMillis)
-				.and("date_time","<=",endOfWeekMillis)
-				.and("transaction_status","=","SUCCESS")
+				.count(TransactionField.TRANSACTION_ID,"credit_count")
+				.from(TransactionField.ROW_ID)
+				.where(TransactionField.ACCOUNT_NO,"=",accountNo)
+			//	.and(TransactionField.TRANSACTION_TYPE, "IN", "(\"CREDIT\",\"DEPOSIT\")")
+				.and(TransactionField.DATE_TIME,">=", startOfWeekMillis)
+				.and(TransactionField.DATE_TIME,"<=",endOfWeekMillis)
+				.and(TransactionField.TRANSACTION_STATUS,"=","SUCCESS")
 				.build();
 		
 		System.out.println(getCreditCount.getQuery());
@@ -135,13 +132,13 @@ private long getStartOfWeekMillis(ZonedDateTime now) {
 
 		Query getCreditCount= new QueryBuilder()
 				.select()
-				.count("transaction_id","debit_count")
-				.from("transaction")
-				.where("account_no","=",accountNo)
-//				.and("transaction_type", "IN", "(\"DEBIT\",\"WITHDRAW\")")
-				.and("date_time",">=", startOfWeekMillis)
-				.and("date_time","<=",endOfWeekMillis)
-				.and("transaction_status","=","SUCCESS")
+				.count(TransactionField.TRANSACTION_ID,"debit_count")
+				.from(TransactionField.ROW_ID)
+				.where(TransactionField.ACCOUNT_NO,"=",accountNo)
+//				.and(TransactionField.TRANSACTION_TYPE, "IN", "(\"DEBIT\",\"WITHDRAW\")")
+				.and(TransactionField.DATE_TIME,">=", startOfWeekMillis)
+				.and(TransactionField.DATE_TIME,"<=",endOfWeekMillis)
+				.and(TransactionField.TRANSACTION_STATUS,"=","SUCCESS")
 				.build();
 		
 		System.out.println(getCreditCount.getQuery());
@@ -161,12 +158,12 @@ private long getStartOfWeekMillis(ZonedDateTime now) {
 	{
 
 		Query transactionHistory = new QueryBuilder()
-				.select("transaction_id,transaction_account_no", "date_time", "amount", "transaction_type",
-					"available_balance", "description")
-				.from("transaction").where("account_no", "=", accountNo)
-				.and("date_time",">=", startMillis)
-				.and("date_time","<=",endMillis)
-				.and("transaction_status","=","SUCCESS")
+				.select(TransactionField.TRANSACTION_ID,TransactionField.ACCOUNT_NO, TransactionField.DATE_TIME, TransactionField.AMOUNT, TransactionField.TRANSACTION_TYPE,
+						TransactionField.AVAILABLE_BALANCE,TransactionField.DESCRIPTION)
+				.from(TransactionField.ROW_ID).where(TransactionField.ACCOUNT_NO, "=", accountNo)
+				.and(TransactionField.DATE_TIME,">=", startMillis)
+				.and(TransactionField.DATE_TIME,"<=",endMillis)
+				.and(TransactionField.TRANSACTION_STATUS,"=","SUCCESS")
 				.limit(11)
 				.offset(offset)
 				.build();

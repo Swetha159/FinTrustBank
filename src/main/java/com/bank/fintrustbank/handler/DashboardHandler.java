@@ -20,11 +20,11 @@ public class DashboardHandler implements HttpRequestHandler {
 				request.getRequestDispatcher("/WEB-INF/dashboard/customerdashboard.jsp").forward(request, response);
 
 			} else if (path.equals("/admin/dashboard")) {
-				request.getRequestDispatcher("/WEB-INF/dashboard/admindashboard.jsp").forward(request, response);
+				request.getRequestDispatcher("/WEB-INF/admindashboard/admindashboard.jsp").forward(request, response);
 
 			} else if (path.equals("/superadmin/dashboard")) {
 
-				request.getRequestDispatcher("/WEB-INF/dashboard/superadmindashboard.jsp").forward(request, response);
+				request.getRequestDispatcher("/WEB-INF/admindashboard/superadmindashboard.jsp").forward(request, response);
 			}
 		} catch (ServletException | IOException e) {
 

@@ -37,6 +37,16 @@ public class Bank extends HttpServlet {
 		processRequest(request, response);
 	}
 
+	@Override
+	protected void doPut(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		processRequest(request, response);
+	}
+	protected void doPatch(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		processRequest(request, response);
+	}
+	
 	private void processRequest(HttpServletRequest request, HttpServletResponse response)  {
 
         
@@ -44,6 +54,7 @@ public class Bank extends HttpServlet {
 		System.out.println(endpoint);
 		EndpointDispatcher dispatcher = new EndpointDispatcher();
 		try {
+			System.out.println("inside process request");
 		dispatcher.dispatch(endpoint,endpointConfig, request, response);
 		
     

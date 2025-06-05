@@ -51,12 +51,26 @@ public class LoginHandler implements HttpRequestHandler {
 //				}
 //			
 		}
+		if (path.equals("/logout")) {
+			System.out.println("what to do ");
+			handleLogOut(request, response);
+
+	}
 		}catch(IOException | SQLException | JSONException | ServletException e)
 		{
 			e.printStackTrace();
 			throw new TaskException(e.getMessage(),e);
 		}
 
+	}
+
+	private void handleLogOut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		  HttpSession session = request.getSession(false); 
+	        if (session != null) {
+	            session.invalidate(); 
+	        }
+	        request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+			
 	}
 
 	public static void handleLogin(HttpServletRequest request, HttpServletResponse response)

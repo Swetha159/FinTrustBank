@@ -1,9 +1,11 @@
 package com.bank.fintrustbank.enums;
 
-public enum PersonField {
-	
-	PERSON_ID("person_id"),
-	NAME("name"),
+import querybuilder.Column;
+
+public enum PersonField implements Column {
+    
+    PERSON_ID("person_id"),
+    NAME("name"),
     EMAIL("email"),
     PHONE_NUMBER("phone_number"),
     ROLE("role"),
@@ -16,21 +18,49 @@ public enum PersonField {
     CREATED_AT("created_at"),
     MODIFIED_AT("modified_at"),
     MODIFIED_BY("modified_by");
-	
-	private final String column;
-	
-	PersonField(String columnName) {
-		this.column = columnName;
-			}
+    
+    private static final String TABLE_NAME = "person";  // Adjust if needed
+    
+    private final String column;
+
+    PersonField(String columnName) {
+        this.column = columnName;
+    }
 
 
-	public String getColumnName()
-	{
-		return this.column;
-	}
-	
-	@Override
-	public String toString() {
-		return column;
-	}
-}
+
+    @Override
+    public String getTableName() {
+        return TABLE_NAME;
+    }
+
+    @Override
+    public String getColumnName() {
+        return column;
+    }
+
+    @Override
+    public String getQualifiedName() {
+        return getTableName() + "." + getColumnName();
+    }
+
+    @Override
+    public String toString() {
+        return getQualifiedName();
+    }
+}    
+    
+    
+    
+    
+    
+    
+    
+ 
+
+
+
+  
+
+   
+

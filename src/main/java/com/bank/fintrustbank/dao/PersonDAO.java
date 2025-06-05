@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.bank.fintrustbank.enums.AccountField;
+import com.bank.fintrustbank.enums.PersonField;
+import com.bank.fintrustbank.enums.PrivilegedUserField;
 import com.bank.fintrustbank.model.Person;
 import com.bank.fintrustbank.util.Password;
 import com.bank.fintrustbank.util.QueryExecutor;
@@ -21,8 +24,8 @@ public class PersonDAO {
 	public Person checkCredentials(String email, String password) throws SQLException, TaskException {
 
 		System.out.println(email + password);
-		Query loginQuery = new QueryBuilder().select("person_id", "role", "password", "status").from("person")
-				.where("email", "=", email).build();
+		Query loginQuery = new QueryBuilder().select(PersonField.PERSON_ID, PersonField.ROLE,PersonField.PASSWORD, PersonField.STATUS).from(PersonField.PERSON_ID)
+				.where(PersonField.EMAIL, "=", email).build();
 
 		System.out.println(loginQuery.getQuery());
 		List<Map<String, Object>> result = qe.executeQuery(loginQuery.getQuery(), loginQuery.getValues());
@@ -54,7 +57,7 @@ public class PersonDAO {
 
 	public boolean addNewCustomer(Person person) throws TaskException, SQLException {
 
-		Query addCustomerQuery = new QueryBuilder().insert("person")
+		Query addCustomerQuery = new QueryBuilder().insert(PersonField.PERSON_ID)
 				.values(person.getPersonId(), person.getName(), person.getEmail(), person.getPhoneNumber(),
 						person.getRole(), person.getPassword(), person.getStatus(), person.getDob(), person.getAadhar(),
 						person.getPan(), person.getAddress(), person.getCreatedAt(), person.getModifiedAt(),
@@ -71,7 +74,7 @@ public class PersonDAO {
 	}
 
 	public Query getInsertQuery(Person person) throws TaskException {
-		Query insertQuery = new QueryBuilder().insert("person")
+		Query insertQuery = new QueryBuilder().insert(PersonField.PERSON_ID)
 				.values(person.getPersonId(), person.getName(), person.getEmail(), person.getPhoneNumber(),
 						person.getRole(), person.getPassword(), person.getStatus(), person.getDob(), person.getAadhar(),
 						person.getPan(), person.getAddress(), person.getCreatedAt(), person.getModifiedAt(),
@@ -83,7 +86,7 @@ public class PersonDAO {
 
 	public boolean addPerson(Person person) throws TaskException, SQLException {
 
-		Query addPersonQuery = new QueryBuilder().insert("person")
+		Query addPersonQuery = new QueryBuilder().insert(PersonField.PERSON_ID)
 				.values(person.getPersonId(), person.getName(), person.getEmail(), person.getPhoneNumber(),
 						person.getRole(), person.getPassword(), person.getStatus(), person.getDob(), person.getAadhar(),
 						person.getPan(), person.getAddress(), person.getCreatedAt(), person.getModifiedAt(),
@@ -100,17 +103,19 @@ public class PersonDAO {
 
 	public Query getUpdateStatusQuery(String customerId, String status, Long modifiedAt, String sessionPersonId)
 			throws TaskException {
-		Query updateStatusQuery = new QueryBuilder().update("person").set("status", status)
-				.set("modified_at", modifiedAt).set("modified_by", sessionPersonId)
-				.where("person_id", "=", "customerId").build();
+		Query updateStatusQuery = new QueryBuilder().update(PersonField.PERSON_ID).set(PersonField.STATUS, status)
+				.set(PersonField.MODIFIED_AT, modifiedAt).set(PersonField.MODIFIED_BY, sessionPersonId)
+				.where(PersonField.PERSON_ID, "=", customerId).build();
 		return updateStatusQuery;
 	}
 
 	public boolean updatePerson(Person person) throws TaskException, SQLException {
-		List<String> excludeColumns = Arrays.asList("person_id", "password", "role", "created_at", "status");
-		Query updateQuery = EditUtil.update(person, "person", "person_id", excludeColumns);
+		List<PersonField> excludeColumns = Arrays.asList(PersonField.PASSWORD, PersonField.ROLE, PersonField.CREATED_AT, PersonField.STATUS);
+		Query updateQuery = EditUtil.update(person, PersonField.PERSON_ID, PersonField.PERSON_ID, excludeColumns);
 
 		System.out.println(updateQuery.getQuery());
+
+		System.out.println(updateQuery.getValues());
 
 		int result = qe.execute(updateQuery.getQuery(), updateQuery.getValues());
 		System.out.println(result);
@@ -124,8 +129,8 @@ public class PersonDAO {
 	public Query getUpdateRoleQuery(String role, String personId, Long modifiedAt, String sessionPersonId)
 			throws TaskException {
 
-		Query updateRoleQuery = new QueryBuilder().update("Person").set("role", role).set("modified_at", modifiedAt)
-				.set("modified_by", sessionPersonId).where("person_id", "=", personId).build();
+		Query updateRoleQuery = new QueryBuilder().update(PersonField.PERSON_ID).set( PersonField.ROLE, role).set(PersonField.MODIFIED_AT, modifiedAt)
+				.set(PersonField.MODIFIED_BY, sessionPersonId).where(PersonField.PERSON_ID, "=", personId).build();
 
 		return updateRoleQuery;
 	}
@@ -147,10 +152,10 @@ public class PersonDAO {
 	public List<Map<String,Object>>  getCustomers(String branchId) throws TaskException, SQLException
 	{
 		Query getCustomers = new QueryBuilder()
-				.select("person_id","name","email","phone_number","account.account_no","account.balance","status")
-				.from("person").join("INNER", "account", new OnClause("account.customer_id","=", "person.person_id"))
-				.where("branch_id", "=", branchId)
-				.and("role","=","CUSTOMER")
+				.select(PersonField.PERSON_ID,PersonField.NAME,PersonField.EMAIL,PersonField.PHONE_NUMBER,AccountField.ACCOUNT_NO,AccountField.BALANCE,PersonField.STATUS)
+				.from(PersonField.PERSON_ID).join("INNER", AccountField.ACCOUNT_NO, new OnClause(AccountField.CUSTOMER_ID,"=", PersonField.PERSON_ID))
+				.where(AccountField.BRANCH_ID, "=", branchId)
+				.and(PersonField.ROLE,"=","CUSTOMER")
 				.build();
 		
 		System.out.println(getCustomers.getQuery());
@@ -160,34 +165,33 @@ public class PersonDAO {
 	}
 	
 	
-	public Map<String,Object> getPersonDetails (String personId ) throws TaskException, SQLException
+	public List<Map<String, Object>> getPersonDetails (String personId ) throws TaskException, SQLException
 	{
 		Query getPersonDetails  = new QueryBuilder()
-				.select("person.person_id" ,"person.name","person.email","person.phone_number","person.status", "person.dob","person.aadhar","person.pan","person.address" ,"person.created_at","person.modified_at","modifier.modified_by" , "modifier.name")				
-				.from("person")
-				.join("INNER", "person", "modifier" , new OnClause("person.modified_by","=", "modifier.modified_by"))
-				.where("person.person_id","=",personId)
+				.select(PersonField.PERSON_ID ,PersonField.NAME,PersonField.EMAIL,PersonField.PHONE_NUMBER,PersonField.STATUS, PersonField.DOB,PersonField.AADHAR,PersonField.PAN,PersonField.ADDRESS ,PersonField.CREATED_AT,PersonField.MODIFIED_AT,PersonField.MODIFIED_BY ,PersonField.NAME.withAlias("modifier").as("modifier_name"))				
+				.from(PersonField.PERSON_ID)
+				.join("INNER", PersonField.PERSON_ID, "modifier" , new OnClause(PersonField.MODIFIED_BY,"=",PersonField.PERSON_ID.withAlias("modifier")))
+				.where(PersonField.PERSON_ID,"=",personId)
 				.build();
 		System.out.println(getPersonDetails.getQuery());
 		List<Map<String, Object>> result = qe.executeQuery(getPersonDetails.getQuery(), getPersonDetails.getValues());
-		Map<String,Object> details = result.get(0);
-		System.out.println(details);
-		if(details.isEmpty())
+	
+		if(result.isEmpty())
 		{
 			return null ; 
 		}
-		return details ; 
+		return result ; 
 		
 	}
 	
 	public List<Map<String,Object>> getAdmins(String branchId) throws TaskException, SQLException
 	{
 		Query getAdmins  = new QueryBuilder()
-							.select("person_id","name","email","phone_number","status")
-							.from("person")
-							.join("INNER", "privileged_user" , new OnClause("privileged_user.admin_id","=","person.person_id"))
-							.where("branch_id","=",branchId)
-							.and("role","=","ADMIN")
+							.select(PersonField.PERSON_ID,PersonField.NAME,PersonField.EMAIL,PersonField.PHONE_NUMBER,PersonField.STATUS)
+							.from(PersonField.PERSON_ID)
+							.join("INNER", PrivilegedUserField.ADMIN_ID , new OnClause(PrivilegedUserField.ADMIN_ID,"=",PersonField.PERSON_ID))
+							.where(PrivilegedUserField.BRANCH_ID,"=",branchId)
+							.and(PersonField.ROLE,"=","ADMIN")
 							.build();
 		System.out.println(getAdmins.getQuery());
 		List<Map<String, Object>> result = qe.executeQuery(getAdmins.getQuery(), getAdmins.getValues());

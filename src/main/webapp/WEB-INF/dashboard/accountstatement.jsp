@@ -17,7 +17,14 @@
    <input type="hidden" name="offset" value="0" id="offsetField" />
   
     <div class="input-group">
-      <p class="dropdown-label">Select Your Account</p>
+  <p class="dropdown-label">Select Your Account</p>
+  
+  <c:choose>
+    <c:when test="${sessionScope.role == 'ADMIN' or sessionScope.role == 'SUPERADMIN'}">
+       <input type="text" name="account_no" value="${accountNo}" />
+    </c:when>
+    
+    <c:otherwise>
       <select name="account_no">
         <c:forEach var="accNo" items="${sessionScope.account_no_list}">
           <option value="${accNo['account_no']}" 
@@ -26,8 +33,10 @@
           </option>
         </c:forEach>
       </select>
-    </div>
-    
+    </c:otherwise>
+  </c:choose>
+</div>
+
     <div class="input-group">
     <label for="startDate">Start Date</label>
     <input type="date" id="start_date" name="start_date" value="${param.startDate}" />

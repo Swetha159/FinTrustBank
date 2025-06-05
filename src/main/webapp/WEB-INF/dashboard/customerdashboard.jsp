@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <title>FINTRUST | DASHBOARD</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/customerdashboard.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/customerdashboard.css">
 </head>
 <body>
 

@@ -80,7 +80,7 @@ public class QueryExecutor {
 					Map<String, Object> rowMap = new HashMap<>();
 
 					for (int i = 1; i <= columnCount; i++) {
-						String columnName = metaData.getColumnName(i);
+						String columnName = metaData.getColumnLabel(i);
 						Object columnValue = resultSet.getObject(i);
 						rowMap.put(columnName, columnValue);
 					}
@@ -94,7 +94,7 @@ public class QueryExecutor {
 			}
 			finally {
 		        if (connection == null) {
-		            conn.close(); // close only if not in transaction
+		            conn.close(); 
 		        }
 			}
 			return resultList;

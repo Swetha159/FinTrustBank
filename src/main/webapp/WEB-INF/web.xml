@@ -47,6 +47,5 @@
     <filter-name>RoleFilter</filter-name>
     <url-pattern>/bank/*</url-pattern>
   </filter-mapping>
- 
 
 </web-app>

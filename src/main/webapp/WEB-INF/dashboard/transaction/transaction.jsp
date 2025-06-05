@@ -19,12 +19,23 @@
   </label>
 
 <div class="input-group">
-   <p class="dropdown-label">Select Your Account</p>
-  <select id="account_no">
-    <c:forEach var="accNo" items="${sessionScope.account_no_list}">
-      <option value="${accNo['account_no']}">${accNo['account_no']}</option>
-    </c:forEach>
-  </select>
+ 
+  
+  <c:choose>
+    <c:when test="${sessionScope.role == 'ADMIN' or sessionScope.role == 'SUPERADMIN'}">
+   <input type="text" id="account_no" name="accountNo"  required>
+    <label for="accountNo">Account No</label>
+     
+    </c:when>
+    <c:otherwise>
+      <p class="dropdown-label">Account Number</p>
+      <select id="account_no" name="account_no" required>
+        <c:forEach var="accNo" items="${sessionScope.account_no_list}">
+          <option value="${accNo['account_no']}">${accNo['account_no']}</option>
+        </c:forEach>
+      </select>
+    </c:otherwise>
+  </c:choose>
 </div>
 
 
@@ -32,7 +43,7 @@
 
   <div class="input-group">
     <input type="text" id="transaction_account_no" name="accountNo" required>
-    <label for="accountNo">Account No</label>
+    <label for="accountNo"> Transaction Account No</label>
   </div>
   <input type="hidden" id="transaction_type" name="transaction_type" value="DEBIT">
   <div class="input-group" id="ifsc_group">

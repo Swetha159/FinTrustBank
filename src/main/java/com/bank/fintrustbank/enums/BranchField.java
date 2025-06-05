@@ -1,6 +1,8 @@
 package com.bank.fintrustbank.enums;
 
-public enum BranchField {
+import querybuilder.Column;
+
+public enum BranchField implements Column {
     BRANCH_ID("branch_id"),
     MANAGER_ID("manager_id"),
     IFSC_CODE("ifsc_code"),
@@ -9,19 +11,32 @@ public enum BranchField {
     MODIFIED_AT("modified_at"),
     MODIFIED_BY("modified_by");
 
-    private final String columnName;
+    private static final String TABLE_NAME = "branch";  // Adjust if needed
+
+    private final String column;
 
     BranchField(String columnName) {
-        this.columnName = columnName;
+        this.column = columnName;
     }
 
+    @Override
+    public String getTableName() {
+        return TABLE_NAME;
+    }
+
+    @Override
     public String getColumnName() {
-        return columnName;
+        return column;
+    }
+
+    @Override
+    public String getQualifiedName() {
+        return getTableName() + "." + getColumnName();
     }
 
     @Override
     public String toString() {
-        return columnName;
+        return getQualifiedName();
     }
-}
 
+}

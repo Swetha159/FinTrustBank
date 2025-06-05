@@ -12,6 +12,12 @@
   <h2>Open Additional Account</h2>
   <form onsubmit="createAccount(); return false;">
     <div class="row">
+    <c:if test="${sessionScope.role == 'ADMIN' || sessionScope.role == 'SUPERADMIN'}">
+  <div class="input-group">
+    <input type="text" name="personId" id="personId" placeholder="Enter Person ID" required />
+  </div>
+</c:if>
+
       <div class="input-group">
         <select name="branchId" id="branchId" required>
           <option value="">Select Branch</option>
@@ -35,11 +41,17 @@
 
 <script>
 function createAccount() {
+	 const personIdField = document.getElementById("personId");
   const data = {
     branch_id: document.getElementById("branchId").value,
+
     account_type: document.getElementById("accountType").value
   };
 
+  if (personIdField) {
+	    const personId = personIdField.value;
+	    data.person_id = personId;
+	  }
   fetch("${pageContext.request.contextPath}/bank/customer/additional-account", {
     method: "POST",
     headers: {

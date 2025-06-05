@@ -43,6 +43,7 @@ public class EndpointDispatcher {
 					break;
 				case "PUT":
 					handler.doPut(request, response);
+					System.out.println("inside dispatch");
 					break;
 				case "DELETE":
 					handler.doDelete(request, response);

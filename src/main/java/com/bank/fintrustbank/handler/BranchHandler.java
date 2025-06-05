@@ -17,6 +17,7 @@ import com.bank.fintrustbank.model.Branch;
 import com.bank.fintrustbank.model.Person;
 import com.bank.fintrustbank.util.BranchIdGenerator;
 import com.bank.fintrustbank.util.IFSCCodeGenerator;
+import com.bank.fintrustbank.util.TimeFormatter;
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -37,7 +38,12 @@ public class BranchHandler implements HttpRequestHandler{
 			 try {
 			 if(path.equals("/branch"))
 			 {
+				 System.out.println("inside do post");
 				 handleAddBranch(request, response);
+			 }
+			 if(path.equals("/branchdetails"))
+			 {
+				 handleBranchDetails(request,response);
 			 }
 			 }catch (IOException  | ServletException | SQLException e) {
 					e.printStackTrace();
@@ -57,11 +63,12 @@ public class BranchHandler implements HttpRequestHandler{
 				 handleGetBranches(request, response);
 
 			 }
-			 if(path.equals("/branchdetails"))
+	
+			 if(path.equals("/branch"))
 			 {
-				 handleBranchDetails(request,response);
+				 request.getRequestDispatcher("/WEB-INF/admindashboard/create-branch.jsp").forward(request, response);
 			 }
-			 }catch (SQLException e) {
+			 }catch (SQLException | ServletException | IOException e) {
 					e.printStackTrace();
 					throw new TaskException(e.getMessage(), e);
 				}
@@ -69,31 +76,49 @@ public class BranchHandler implements HttpRequestHandler{
 			 
 	  }
 	 
-	 private void handleBranchDetails(HttpServletRequest request, HttpServletResponse response) throws TaskException, SQLException {
+	 private void handleBranchDetails(HttpServletRequest request, HttpServletResponse response) throws TaskException, SQLException, IOException, ServletException {
 		 HttpSession session = request.getSession(false);
 			String sessionPersonId = (String) session.getAttribute("personId");
-
-			List<Map<String,Object>>  details  = branchDAO.getBranchDetails(sessionPersonId);
-			if(details!=null)
+			String jsonBody = new BufferedReader(request.getReader()).lines().collect(Collectors.joining());
+			JsonNode rootNode = mapper.readTree(jsonBody);
+			String branchId = rootNode.path("branch_id").asText();
+         
+			List<Map<String,Object>>  details  = branchDAO.getBranchDetails(branchId);
+			
+			 if(details!=null)
+			 {
+				 TimeFormatter.convertMillisToDateTime(details, "created_at");
+				 TimeFormatter.convertMillisToDateTime(details, "modified_at");
+				 Map<String,Object> branch = details.get(0);
+				 request.setAttribute("branch", branch);
+				 request.getRequestDispatcher("/WEB-INF/admindashboard/edit-branch.jsp").forward(request, response);
+			 }
+		else
 			{
-				
-			}else
-			{
-				
+			 request.setAttribute("page" , "branches") ; 
+			 request.getRequestDispatcher("/WEB-INF/admindashboard/superadmindashboard.jsp").forward(request, response);
 			}
 		
 	}
 
-	private void handleGetBranches(HttpServletRequest request, HttpServletResponse response) throws TaskException, SQLException {
+	private void handleGetBranches(HttpServletRequest request, HttpServletResponse response) throws TaskException, SQLException, ServletException, IOException {
 
 		 
 		 List<Map<String , Object>>  result = branchDAO.getBranches();
 		 if(result!= null)
 		 {
+			 TimeFormatter.convertMillisToDateTime(result, "created_at");
+			 TimeFormatter.convertMillisToDateTime(result, "modified_at");
 			 
+			 request.setAttribute("branches" , result) ; 
+			 request.setAttribute("page" , "branches") ; 
+			 
+			 request.getRequestDispatcher("/WEB-INF/admindashboard/superadmindashboard.jsp").forward(request, response);
 		 }
 		 else
 		 {
+			 request.setAttribute("page" , "branches") ; 
+			 request.getRequestDispatcher("/WEB-INF/admindashboard/superadmindashboard.jsp").forward(request, response);
 			 
 		 }
 	}

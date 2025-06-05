@@ -1,6 +1,8 @@
 package com.bank.fintrustbank.enums;
 
-public enum TransactionField {
+import querybuilder.Column;
+
+public enum TransactionField implements Column {
     TRANSACTION_ID("transaction_id"),
     CUSTOMER_ID("customer_id"),
     ACCOUNT_NO("account_no"),
@@ -14,19 +16,32 @@ public enum TransactionField {
     TRANSACTION_BY("transaction_by"),
     ROW_ID("row_id");
 
-    private final String columnName;
+    private static final String TABLE_NAME = "transaction"; // Adjust if necessary
+
+    private final String column;
 
     TransactionField(String columnName) {
-        this.columnName = columnName;
+        this.column = columnName;
     }
 
+    @Override
+    public String getTableName() {
+        return TABLE_NAME;
+    }
+
+    @Override
     public String getColumnName() {
-        return columnName;
+        return column;
+    }
+
+    @Override
+    public String getQualifiedName() {
+        return getTableName() + "." + getColumnName();
     }
 
     @Override
     public String toString() {
-        return columnName;
+        return getQualifiedName();
     }
-}
 
+}

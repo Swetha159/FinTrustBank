@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import com.bank.fintrustbank.enums.PrivilegedUserField;
 import com.bank.fintrustbank.model.PrivilegedUser;
 import com.bank.fintrustbank.util.QueryExecutor;
 import com.zoho.training.exceptions.TaskException;
@@ -17,7 +18,7 @@ public class PrivilegedUserDAO {
 	public Query getInsertQuery(PrivilegedUser privilegedUser) throws TaskException {
 		
 		Query insertQuery = new QueryBuilder()
-							.insert("privileged_users")
+							.insert(PrivilegedUserField.ADMIN_ID)
 							.values(privilegedUser.getAdminId(),privilegedUser.getBranchId(),privilegedUser.getCreatedAt(),
 									privilegedUser.getModifiedAt(),privilegedUser.getModifiedBy())
 							.build();
@@ -28,9 +29,9 @@ public class PrivilegedUserDAO {
     public String getBranch(String adminId) throws TaskException, SQLException
     {
     	Query getBranch = new QueryBuilder()
-    			.select("branch_id")
-    			.from("privileged_user")
-    			.where("admin_id", "=", adminId)
+    			.select(PrivilegedUserField.BRANCH_ID)
+    			.from(PrivilegedUserField.ADMIN_ID)
+    			.where(PrivilegedUserField.ADMIN_ID, "=", adminId)
     			.build();
     	
     	System.out.println(getBranch.getQuery());

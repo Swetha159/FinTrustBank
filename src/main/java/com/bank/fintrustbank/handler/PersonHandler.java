@@ -14,9 +14,11 @@ import javax.servlet.http.HttpSession;
 
 import com.bank.fintrustbank.dao.BranchDAO;
 import com.bank.fintrustbank.dao.PersonDAO;
+import com.bank.fintrustbank.dao.PrivilegedUserDAO;
 import com.bank.fintrustbank.model.Person;
 import com.bank.fintrustbank.service.AdminService;
 import com.bank.fintrustbank.service.CustomerService;
+import com.bank.fintrustbank.util.TimeFormatter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -36,8 +38,36 @@ public class PersonHandler implements HttpRequestHandler  {
 	 try {
 	 if(path.equals("/person"))
 	 {
-		 handleUpdatePerson(request,response);
+		 if( handleUpdatePerson(request,response))
+			{
+				response.setContentType("text/plain");
+				response.getWriter().write("Updation Successful");
+
+			}
+			else
+			{
+				response.setContentType("text/plain");
+				response.getWriter().write("Updation Unsuccessful");
+
+			}
+		;
 	 }
+	
+	 }catch (IOException  | ServletException | SQLException  e) {
+			e.printStackTrace();
+			throw new TaskException(e.getMessage(), e);
+		}
+ }
+	
+	@Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws TaskException{
+	 String path = request.getPathInfo();
+	 try {
+		 if(path.equals("/person/details"))
+		 {
+			  handleGetPersonDetails(request , response) ; 
+				request.getRequestDispatcher("/WEB-INF/admindashboard/editform.jsp").forward(request, response) ; 
+		 }
 	
 	 }catch (IOException  | ServletException | SQLException  e) {
 			e.printStackTrace();
@@ -50,50 +80,80 @@ public class PersonHandler implements HttpRequestHandler  {
 	 try {
 	 if(path.equals("/customers"))
 	 {
-		 handleGetCustomers(request,response);
-	 }
-	 else if(path.equals("/customer/details"))
-	 {
-		 handleGetCustomerDetails(request,response);
+		 HttpSession session = request.getSession(false);
+			if (session == null || session.getAttribute("personId") == null) {
+				request.setAttribute("errorMessage", "session expired");
+				request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
+				
+			}
+		 List<Map<String,Object>> customers =handleGetCustomers(request,response);
+		 if(customers!=null)
+		 {
+			 //TimeFormatter.convertMillisToDateTime(customers, "created_at");
+			 request.setAttribute("customers", customers);
+			
+		 }
+		 request.setAttribute("page", "customers");
+		 if(session.getAttribute("role").equals("ADMIN"))
+			{
+				request.getRequestDispatcher("/bank/admin/dashboard").forward(request, response);
+			}
+			else if(session.getAttribute("role").equals("SUPERADMIN"))
+			{
+				request.getRequestDispatcher("/bank/superadmin/dashboard").forward(request, response);
+			}
+			else
+			{
+				request.setAttribute("errorMessage", "Access Restricted");
+				request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
+			}
 	 }
 	
-	 }catch (IOException | SQLException  e) {
+	
+	 }catch (IOException | SQLException | ServletException  e) {
 			e.printStackTrace();
 			throw new TaskException(e.getMessage(), e);
 		}
  }
-	private void handleGetCustomerDetails(HttpServletRequest request, HttpServletResponse response) throws TaskException, SQLException, IOException {
+	private void handleGetPersonDetails(HttpServletRequest request, HttpServletResponse response) throws TaskException, SQLException, IOException {
 
 		String jsonBody = new BufferedReader(request.getReader()).lines().collect(Collectors.joining());
 		JsonNode rootNode = mapper.readTree(jsonBody);
 		
 		String personId = rootNode.path("person_id").asText();
-		Map<String,Object>  details  = personDAO.getPersonDetails(personId);
-		if(details!=null)
-		{
+		List<Map<String, Object>>  details  = personDAO.getPersonDetails(personId);
+		 if(details!=null)
+		 {
+			 TimeFormatter.convertMillisToDateTime(details, "created_at");
+			 TimeFormatter.convertMillisToDateTime(details, "modified_at");
+			 Map<String,Object> person = details.get(0);
+			 request.setAttribute("person", person);
 			
-		}else
-		{
+		 }
+	
 			
-		}
+		
 		
 	}
-	private void handleGetCustomers(HttpServletRequest request, HttpServletResponse response) throws IOException, TaskException, SQLException {
+	private List<Map<String,Object>>  handleGetCustomers(HttpServletRequest request, HttpServletResponse response) throws IOException, TaskException, SQLException, ServletException {
 		
-		String jsonBody = new BufferedReader(request.getReader()).lines().collect(Collectors.joining());
-		JsonNode rootNode = mapper.readTree(jsonBody);
+	
+		HttpSession session = request.getSession(false);
+		if (session == null || session.getAttribute("personId") == null) {
+			request.setAttribute("errorMessage", "session expired");
+			request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
+			return null;
+		}
+
+		String sessionPersonId = (String) session.getAttribute("personId");
+		String branchId  = session.getAttribute("branch_id")!=null ? (String) session.getAttribute("branch_id") : new PrivilegedUserDAO().getBranch(sessionPersonId);
 		
-		String branchId = rootNode.path("branch_id").asText();
+		
 		List<Map<String,Object>>  customers  = personDAO.getCustomers(branchId);
-		if(customers!=null)
-		{
-			
-		}else
-		{
-			
-		}
+		return customers ;  
 		
 	}
+	
 	@Override
 	public void doPatch(HttpServletRequest request , HttpServletResponse response) throws TaskException
 	{
@@ -210,10 +270,11 @@ public class PersonHandler implements HttpRequestHandler  {
 		HttpSession session = request.getSession(false);
 		String sessionPersonId = (String) session.getAttribute("personId");
 		BufferedReader reader = request.getReader();
-		
 		Person person  =mapper.readValue(reader,Person.class);
 		person.setModifiedBy(sessionPersonId);
 		person.setModifiedAt(System.currentTimeMillis());
+		System.out.println(person);
+		
 		return personDAO.updatePerson(person);
 		
 	}

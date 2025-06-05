@@ -24,6 +24,6 @@
 	<classpathentry kind="lib" path="/home/swetha-23428/Documents/TaskException.jar"/>
 	<classpathentry kind="lib" path="/home/swetha-23428/Documents/standard.jar"/>
 	<classpathentry kind="lib" path="/home/swetha-23428/Documents/jstl.jar"/>
-	<classpathentry kind="lib" path="/home/swetha-23428/Desktop/QueryBuilder.jar"/>
+	<classpathentry kind="lib" path="/home/swetha-23428/Documents/QueryBuilder.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

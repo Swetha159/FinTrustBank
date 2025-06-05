@@ -1,6 +1,8 @@
 package com.bank.fintrustbank.enums;
 
-public enum AccountRequestField {
+import querybuilder.Column;
+
+public enum AccountRequestField implements Column {
     PERSON_ID("person_id"),
     BRANCH_ID("branch_id"),
     ACCOUNT_TYPE("account_type"),
@@ -9,19 +11,31 @@ public enum AccountRequestField {
     MODIFIED_AT("modified_at"),
     MODIFIED_BY("modified_by");
 
-    private final String columnName;
+    private static final String TABLE_NAME = "account_request";  // Adjust to your actual table name
+
+    private final String column;
 
     AccountRequestField(String columnName) {
-        this.columnName = columnName;
+        this.column = columnName;
     }
 
+    @Override
+    public String getTableName() {
+        return TABLE_NAME;
+    }
+
+    @Override
     public String getColumnName() {
-        return columnName;
+        return column;
+    }
+
+    @Override
+    public String getQualifiedName() {
+        return getTableName() + "." + getColumnName();
     }
 
     @Override
     public String toString() {
-        return columnName;
+        return getQualifiedName();
     }
 }
-
