@@ -203,5 +203,22 @@ public class PersonDAO {
 		return result ; 
 	}
 	
+	public boolean updatePassword(String email , String hashedPassword) throws TaskException, SQLException
+	{
+		
+		Query updatePasswordQuery = new QueryBuilder()
+				.update(PersonField.PERSON_ID)
+				.set(PersonField.PASSWORD, hashedPassword)
+				.where(PersonField.EMAIL,"=" , email)
+				.build() ; 
+		
+		int result = qe.execute(updatePasswordQuery.getQuery(), updatePasswordQuery.getValues());
+		System.out.println(result);
+		if (result > 0) {
+			return true;
+		}
+		return false;
+		
+	}
 	
 }

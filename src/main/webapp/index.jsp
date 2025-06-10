@@ -20,7 +20,7 @@
      <h3>
      Open Your Account Today
      </h3>
-     <form action="bank/account-request" method="get">
+     <form action="account-request" method="get">
   <button class="new-account-button">Open New Account</button>
 </form>
         

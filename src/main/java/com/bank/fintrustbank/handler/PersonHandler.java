@@ -3,8 +3,12 @@ package com.bank.fintrustbank.handler;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
@@ -15,10 +19,17 @@ import javax.servlet.http.HttpSession;
 import com.bank.fintrustbank.dao.BranchDAO;
 import com.bank.fintrustbank.dao.PersonDAO;
 import com.bank.fintrustbank.dao.PrivilegedUserDAO;
+import com.bank.fintrustbank.dao.ResetTokenDAO;
 import com.bank.fintrustbank.model.Person;
+import com.bank.fintrustbank.model.ResetToken;
 import com.bank.fintrustbank.service.AdminService;
 import com.bank.fintrustbank.service.CustomerService;
+import com.bank.fintrustbank.util.EmailService;
+import com.bank.fintrustbank.util.Password;
 import com.bank.fintrustbank.util.TimeFormatter;
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.core.exc.StreamWriteException;
+import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -62,6 +73,7 @@ public class PersonHandler implements HttpRequestHandler  {
 	@Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws TaskException{
 	 String path = request.getPathInfo();
+	 System.out.println("inside doPost"+ path); 
 	 try {
 		 if(path.equals("/person/details"))
 		 {
@@ -69,14 +81,29 @@ public class PersonHandler implements HttpRequestHandler  {
 				request.getRequestDispatcher("/WEB-INF/admindashboard/editform.jsp").forward(request, response) ; 
 		 }
 	
+		 else if(path.equals("/forgot-password"))
+		 {
+			
+		        handleResetPasswordRequest(request, response);
+		    }
+		 else if (path.equals("/reset-password"))
+		 {
+
+		        handleChangePassword(request, response);
+		        
+		    }
+		 
+		 
 	 }catch (IOException  | ServletException | SQLException  e) {
 			e.printStackTrace();
 			throw new TaskException(e.getMessage(), e);
 		}
  }
+	
 	@Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws TaskException {
 	 String path = request.getPathInfo();
+	 
 	 try {
 	 if(path.equals("/customers"))
 	 {
@@ -89,7 +116,7 @@ public class PersonHandler implements HttpRequestHandler  {
 		 List<Map<String,Object>> customers =handleGetCustomers(request,response);
 		 if(customers!=null)
 		 {
-			 //TimeFormatter.convertMillisToDateTime(customers, "created_at");
+			 
 			 request.setAttribute("customers", customers);
 			
 		 }
@@ -107,14 +134,104 @@ public class PersonHandler implements HttpRequestHandler  {
 				request.setAttribute("errorMessage", "Access Restricted");
 				request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
 			}
+	 } 
+	 else if(path.equals("/forgot-password"))
+	 {
+		 request.getRequestDispatcher("/WEB-INF/views/forgot-password.jsp").forward(request, response);
 	 }
-	
-	
+	 else if(path.equals("/reset-password"))
+	 {
+		 request.getRequestDispatcher("/WEB-INF/views/reset-password.jsp").forward(request, response);
+	 }
 	 }catch (IOException | SQLException | ServletException  e) {
 			e.printStackTrace();
 			throw new TaskException(e.getMessage(), e);
 		}
  }
+
+	private void handleResetPasswordRequest(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, StreamReadException, DatabindException, StreamWriteException {
+		//Map<String, String> requestBody = mapper.readValue(request.getInputStream(), Map.class);
+		String email = request.getParameter("email");
+
+		response.setContentType("application/json");
+		Map<String, String> jsonResponse = new HashMap<>();
+
+		try {
+		    String token = UUID.randomUUID().toString();
+		    Timestamp expiry = Timestamp.valueOf(LocalDateTime.now().plusMinutes(30));
+
+		    Long expiryMillis = expiry.toInstant().toEpochMilli();
+		    
+		    new ResetTokenDAO().saveToken(new ResetToken(email,  expiryMillis , token));
+
+		    String resetLink = request.getRequestURL().toString().replace("forgot-password", "reset-password") + "?token=" + token;
+
+
+		    String emailBody = "Click this link to reset your password:\n" + resetLink;
+		    EmailService.sendEmail(email, "Password Reset Request", emailBody);
+
+		    jsonResponse.put("message", "Reset link sent to email.");
+		    response.setStatus(HttpServletResponse.SC_OK);
+
+		} catch (Exception e) {
+		    e.printStackTrace();
+		    jsonResponse.put("error", "Failed to process request.");
+		    response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+
+		mapper.writeValue(response.getOutputStream(), jsonResponse);
+	}
+
+	private void handleChangePassword(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, StreamReadException, DatabindException, TaskException, StreamWriteException {
+		System.out.println("inside the method ");
+		Map<String, String> requestBody = mapper.readValue(request.getInputStream(), Map.class);
+		String token = requestBody.get("token");
+		String newPassword = requestBody.get("newPassword");
+
+		response.setContentType("application/json");
+		Map<String, String> jsonResponse = new HashMap<>();
+
+		try {
+			ResetTokenDAO resetTokenDAO = new ResetTokenDAO() ;
+			Map<String,Object> result = resetTokenDAO.getExpiryAndUsed(token) ; 
+			System.out.println(result.toString());
+			Long expiry = (Long) result.get("expiry");
+			Boolean used = (Boolean) result.get("used") ; 
+			
+			if(System.currentTimeMillis() >= expiry  || used==true)
+			{
+				jsonResponse.put("error", "Invalid or expired token.");
+		        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			} else {
+		        String email = resetTokenDAO.getEmail(token);
+		        if (email == null) {
+		            jsonResponse.put("error", "Token not associated with any email.");
+		            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		        } else {
+		            
+		            String hashedPassword = Password.createHash(newPassword);
+		            boolean success =  new PersonDAO().updatePassword(email, hashedPassword);
+		            if (success) {
+		                resetTokenDAO.markUsed(token);
+		                jsonResponse.put("message", "Password reset successful.");
+		                response.setStatus(HttpServletResponse.SC_OK);
+		            } else {
+		                jsonResponse.put("error", "Failed to update password.");
+		                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		            }
+		        }
+		    }
+		} catch (SQLException e) {
+		    e.printStackTrace();
+		    jsonResponse.put("error", "Server error.");
+		    response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+
+		mapper.writeValue(response.getOutputStream(), jsonResponse);
+	}
+
 	private void handleGetPersonDetails(HttpServletRequest request, HttpServletResponse response) throws TaskException, SQLException, IOException {
 
 		String jsonBody = new BufferedReader(request.getReader()).lines().collect(Collectors.joining());

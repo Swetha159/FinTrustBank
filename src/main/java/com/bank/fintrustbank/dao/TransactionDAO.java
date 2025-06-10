@@ -9,11 +9,14 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Map;
 
+import com.bank.fintrustbank.enums.AccountField;
+import com.bank.fintrustbank.enums.PersonField;
 import com.bank.fintrustbank.enums.TransactionField;
 import com.bank.fintrustbank.model.Transaction;
 import com.bank.fintrustbank.util.QueryExecutor;
 import com.zoho.training.exceptions.TaskException;
 
+import querybuilder.OnClause;
 import querybuilder.Query;
 import querybuilder.QueryBuilder;
 
@@ -158,7 +161,7 @@ private long getStartOfWeekMillis(ZonedDateTime now) {
 	{
 
 		Query transactionHistory = new QueryBuilder()
-				.select(TransactionField.TRANSACTION_ID,TransactionField.ACCOUNT_NO, TransactionField.DATE_TIME, TransactionField.AMOUNT, TransactionField.TRANSACTION_TYPE,
+				.select(TransactionField.TRANSACTION_ID,TransactionField.TRANSACTION_ACCOUNT_NO, TransactionField.DATE_TIME, TransactionField.AMOUNT, TransactionField.TRANSACTION_TYPE,
 						TransactionField.AVAILABLE_BALANCE,TransactionField.DESCRIPTION)
 				.from(TransactionField.ROW_ID).where(TransactionField.ACCOUNT_NO, "=", accountNo)
 				.and(TransactionField.DATE_TIME,">=", startMillis)
@@ -181,5 +184,26 @@ private long getStartOfWeekMillis(ZonedDateTime now) {
 //		return updateStatus;
 //	}
 
+	
+	public List<Map<String, Object>>  getBeneficiaries(String accountNo) throws TaskException, SQLException
+	{
+		Query beneficiaries  =  new QueryBuilder() 
+				.select(PersonField.NAME , TransactionField.TRANSACTION_ACCOUNT_NO).max(TransactionField.DATE_TIME, "latest_transaction")
+				.from(TransactionField.ROW_ID)
+				.join("INNER", AccountField.ACCOUNT_NO, new OnClause(TransactionField.TRANSACTION_ACCOUNT_NO,"=" , AccountField.ACCOUNT_NO))
+				.join("INNER", PersonField.PERSON_ID, new OnClause(AccountField.CUSTOMER_ID,"=" , PersonField.PERSON_ID))
+				.where(TransactionField.ACCOUNT_NO, "=", accountNo)
+				.groupBy(TransactionField.TRANSACTION_ACCOUNT_NO)
+				.groupBy(PersonField.NAME)
+				.orderBy("latest_transaction", false)
+				.limit(20)
+				.build() ;
+		
+		System.out.println(beneficiaries.getQuery()+beneficiaries.getValues());
+		List<Map<String, Object>> result = qe.executeQuery(beneficiaries.getQuery(),beneficiaries.getValues());
+		System.out.println(result);
+        return result;
+		
+	}
 	
 }

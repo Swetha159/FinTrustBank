@@ -38,7 +38,13 @@ public class FirstAccountHandler implements HttpRequestHandler {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws TaskException {
 
-		String path = request.getPathInfo();
+		//String path = request.getPathInfo();
+		//String path = request.getServletPath();
+		String path = request.getServletPath();
+		 if(path.startsWith("/bank"))
+		 {
+			path = request.getPathInfo();
+		 }
 		try {
 			if (path.equals("/account-request")) {
 				List<Branch> branches = new BranchDAO().getAllBranches();
@@ -87,7 +93,12 @@ public class FirstAccountHandler implements HttpRequestHandler {
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws TaskException {
 
-		String path = request.getPathInfo();
+		//String path = request.getPathInfo();
+		String path = request.getServletPath();
+		 if(path.startsWith("/bank"))
+		 {
+			path = request.getPathInfo();
+		 }
 		try {
 			System.out.println("inga varen");
 			if (path.equals("/account-request")) {

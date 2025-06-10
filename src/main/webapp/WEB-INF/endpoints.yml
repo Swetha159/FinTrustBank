@@ -13,6 +13,8 @@
 /history:
   handler: TransactionHandler
 
+  /withdraw:
+    handler: TransactionHandler
 /history/creditcount:
   handler: TransactionHandler
 
@@ -106,4 +108,14 @@
 /profile:
   handler: PersonHandler
 
+/forgot-password : 
+  handler: PersonHandler
   
+/reset-password:
+  handler: PersonHandler
+  
+/beneficiary:
+  handler: TransactionHandler
+    
+  /deposit:
+    handler: TransactionHandler 

@@ -3,6 +3,7 @@ package com.bank.fintrustbank.dao;
 import com.bank.fintrustbank.enums.AccountField;
 import com.bank.fintrustbank.enums.AccountRequestField;
 import com.bank.fintrustbank.enums.PersonField;
+import com.bank.fintrustbank.enums.TransactionField;
 import com.zoho.training.exceptions.TaskException;
 
 import querybuilder.OnClause;
@@ -14,14 +15,18 @@ public class test {
 	public static void main(String args[])
 	{
 		  try {
-			Query getAccounts =  new QueryBuilder()
-					.select(PersonField.PERSON_ID , PersonField.NAME,PersonField.EMAIL,PersonField.PHONE_NUMBER , PersonField.DOB , PersonField.AADHAR, PersonField.PAN,PersonField.ADDRESS,PersonField.CREATED_AT,PersonField.MODIFIED_BY,PersonField.NAME.withAlias("modifier").as("modifier_name"), AccountField.ACCOUNT_TYPE)
-					.from(AccountRequestField.PERSON_ID)
-					.join("INNER",PersonField.PERSON_ID, new OnClause(AccountRequestField.PERSON_ID,"=", PersonField.PERSON_ID ))
-					.join("INNER",  PersonField.PERSON_ID, "modifier" , new OnClause(PersonField.MODIFIED_BY,"=",PersonField.PERSON_ID.withAlias("modifier")))
-					.where(AccountRequestField.REQUEST_STATUS, "=","sjdf")
-					.and(AccountRequestField.BRANCH_ID, "=", "jgsdS")
-					.build();
+			  Long accountNo = 101203705548L; 
+				Query  getAccounts  = new QueryBuilder() 
+						.select(PersonField.NAME , TransactionField.TRANSACTION_ACCOUNT_NO).max(TransactionField.DATE_TIME, "latest_transaction")
+						.from(TransactionField.ROW_ID)
+						.join("INNER", AccountField.ACCOUNT_NO, new OnClause(TransactionField.TRANSACTION_ACCOUNT_NO,"=" , AccountField.ACCOUNT_NO))
+						.join("INNER", PersonField.PERSON_ID, new OnClause(AccountField.CUSTOMER_ID,"=" , PersonField.PERSON_ID))
+						.where(TransactionField.ACCOUNT_NO, "=", accountNo)
+						.groupBy(TransactionField.TRANSACTION_ACCOUNT_NO)
+						.groupBy(PersonField.NAME)
+						.orderBy("latest_transaction", false)
+						.limit(20)
+						.build() ;
 			System.out.println(getAccounts.getQuery()) ; 
 		} catch (TaskException e) {
 			// TODO Auto-generated catch block

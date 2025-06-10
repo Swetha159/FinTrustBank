@@ -20,7 +20,8 @@
         <div class="input-group">
           <input type="password" id="password" name="password" required>
           <label for="password">Password</label>
-          <a href="#">Forgot Password?</a>
+        <a href="${pageContext.request.contextPath}/bank/forgot-password">Forgot Password?</a>
+
         </div>
                   
         <button type="submit" class="login-button">Login</button>
@@ -43,7 +44,7 @@
           password : form.password.value 
       };
 
-      fetch("<%= request.getContextPath() %>/bank/login", {
+      fetch("<%= request.getContextPath() %>/login", {
           method: "POST",
           headers: {
               "Content-Type": "application/json"

@@ -1,6 +1,8 @@
 package com.bank.fintrustbank.service;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 import com.bank.fintrustbank.dao.AccountDAO;
 import com.bank.fintrustbank.dao.TransactionDAO;
@@ -16,7 +18,7 @@ public class TransactionService {
 	private final AccountDAO accountDAO = new AccountDAO();
 	private final TransactionDAO transactionDAO = new TransactionDAO();
 	private final QueryExecutor qe = new QueryExecutor();
-    private static final Long BANK_ACCOUNT_NO = 123456789012L ;
+   
 
 	public boolean processTransaction(Transaction debit, boolean otherBank) throws TaskException, SQLException {
 
@@ -93,11 +95,12 @@ System.out.println(debit.getAccountNo());
 
 	public boolean processDeposit(Transaction credit) throws SQLException, TaskException {
 		try {
-
+			 List<Map<String, Object>> result = accountDAO.getAccountNo("BANK_ACCOUNT");
+			    Long BANK_ACCOUNT_NO  = (Long)result.get(0).get("account_no");
 			Double balance = accountDAO.getBalance(credit.getAccountNo());
-
+			System.out.println(balance);
 			Double balanceAfterDeposit = balance + credit.getAmount();
-
+			System.out.println(balanceAfterDeposit);
 			credit.setAvailableBalance(balanceAfterDeposit);
 			credit.setRowId(RowIdGenerator.generateRowId());
 			credit.setTransactionId(
@@ -129,7 +132,8 @@ System.out.println(debit.getAccountNo());
 
 	public boolean processWithdraw(Transaction debit) throws SQLException, TaskException {
 		try {
-
+			 List<Map<String, Object>> result = accountDAO.getAccountNo("BANK_ACCOUNT");
+			    Long BANK_ACCOUNT_NO  = (Long)result.get(0).get("account_no");
 			Double balance = accountDAO.getBalance(debit.getAccountNo());
 
 			Double balanceAfterWithdraw = balance - debit.getAmount();

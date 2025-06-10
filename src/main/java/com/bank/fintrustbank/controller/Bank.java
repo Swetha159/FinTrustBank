@@ -28,12 +28,14 @@ public class Bank extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		System.out.println("inside doGet in servlet") ; 
 		processRequest(request, response);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		System.out.println("inside doPost in servlet") ; 
 		processRequest(request, response);
 	}
 
@@ -49,9 +51,14 @@ public class Bank extends HttpServlet {
 	
 	private void processRequest(HttpServletRequest request, HttpServletResponse response)  {
 
-        
-		String endpoint = request.getPathInfo();
-		System.out.println(endpoint);
+       
+		//
+		String endpoint = request.getServletPath();
+		 if(endpoint.startsWith("/bank"))
+		 {
+			endpoint = request.getPathInfo();
+		 }
+		System.out.println("endpoint in servlet"+endpoint);
 		EndpointDispatcher dispatcher = new EndpointDispatcher();
 		try {
 			System.out.println("inside process request");

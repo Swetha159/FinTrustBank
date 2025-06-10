@@ -37,7 +37,9 @@ public class BankFilter implements Filter {
 		 HttpServletResponse httpResponse = (HttpServletResponse) response;
 	    
 		String endpoint = httpRequest.getPathInfo();
-	
+	    //String endpoint = httpRequest.getServletPath();
+	    //String endpoint = httpRequest.getRequestURI().substring(httpRequest.getContextPath().length());
+
 	    System.out.println(endpoint);
 	    try {
 	    if (endpointConfig == null) {
@@ -45,15 +47,15 @@ public class BankFilter implements Filter {
             httpRequest.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
             return;
 		}
-	    if ("/login".equals(endpoint) || "/account-request".equals(endpoint)) {
+	    if ("/login".equals(endpoint) || "/account-request".equals(endpoint) || "/forgot-password".equals(endpoint) || "/reset-password".equals(endpoint)) {
             chain.doFilter(request, response);
             return;
         }
 
-        if (endpoint == null || endpoint.startsWith("/assets") || endpoint.startsWith("/css") || endpoint.startsWith("/js")) {
-            chain.doFilter(request, response);
-            return;
-        }
+//        if (endpoint == null || endpoint.startsWith("/assets") || endpoint.startsWith("/css") || endpoint.startsWith("/js")) {
+//            chain.doFilter(request, response);
+//            return;
+//        }
 	    if(endpointConfig.containsKey(endpoint))
 	    {
 	    	HttpSession session = httpRequest.getSession(false);

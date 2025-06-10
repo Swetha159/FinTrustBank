@@ -8,7 +8,7 @@
 <header>
   <div class="header-container">
     <div class="bank-container">
-      <img src="${pageContext.request.contextPath}/assets/ftlogowhite.png" alt="logo" class="logo">
+      <img src="<%= request.getContextPath() %>/assets/ftlogowhite.png" alt="logo" class="logo">
       <div class="bank-text">
         <div class="bank-name">FINTRUST</div>
         <div class="bank-tagline">Your Perfect Banking Partner</div>
@@ -21,7 +21,7 @@
       <a href="#">FAQ</a>
       <a href="#">Complaint</a>
     </div>
-<form action="bank/login" method="get">
+<form action="login" method="get">
   <button type="submit" class="login-button">Login</button>
 </form>
 

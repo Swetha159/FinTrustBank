@@ -19,7 +19,15 @@
         <li><a href="${pageContext.request.contextPath}/bank/admin/requests">Account Requests</a></li>
         <li><a href="${pageContext.request.contextPath}/bank/customers">Customers</a></li>
         <li><a href="${pageContext.request.contextPath}/bank/transaction">Transfer Money</a></li>
-        <li><a href="${pageContext.request.contextPath}/bank/history">Account Statement</a></li>
+          <li><a href="${pageContext.request.contextPath}/bank/withdraw"> Withdraw </a></li>
+            <li><a href="${pageContext.request.contextPath}/bank/deposit"> Deposit </a></li>
+   <li>
+  <form id="historyForm" method="post" action="${pageContext.request.contextPath}/bank/history" style="display: inline;">
+
+    <a href="#" onclick="document.getElementById('historyForm').submit(); return false;">Account Statement</a>
+  </form>
+</li>
+
         <li><a href="${pageContext.request.contextPath}/bank/admin/additional-account">Additional Account Creation</a></li>
         <li><a href="${pageContext.request.contextPath}/bank/account-request">New Account Creation</a></li>
     </ul>
@@ -45,6 +53,9 @@
     </c:when>
      <c:when test="${pageAttr == 'history'}">
         <jsp:include page="../dashboard/accountstatement.jsp" />
+    </c:when>
+      <c:when test="${pageAttr == 'deposit-withdraw'}">
+        <jsp:include page="../dashboard/transaction/deposit-withdraw.jsp" />
     </c:when>
     <c:otherwise>
         <jsp:include page="notfound.jsp" />

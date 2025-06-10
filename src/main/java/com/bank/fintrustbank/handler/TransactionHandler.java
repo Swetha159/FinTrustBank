@@ -18,6 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import com.bank.fintrustbank.dao.TransactionDAO;
 import com.bank.fintrustbank.model.Transaction;
 import com.bank.fintrustbank.service.TransactionService;
@@ -54,24 +57,7 @@ public class TransactionHandler implements HttpRequestHandler {
 				handleCreditCount(request, response);
 			} else if (path.equals("/debitcount")) {
 				handleDebitCount(request, response);
-			}
-		} catch (IOException | ServletException | SQLException | TaskException e) {
-			e.printStackTrace();
-			throw new TaskException(e.getMessage(), e);
-		}
-
-	}
-
-	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws TaskException {
-
-		try {
-			String path = request.getPathInfo();
-			if (path.equals("/transactions")) {
-				
-				handleViewTransaction(request, response);
-
-			} else if (path.equals("/history")) {
+			}else if (path.equals("/history")) {
 				HttpSession session = request.getSession(false);
 				if (session == null || session.getAttribute("personId") == null) {
 					request.setAttribute("errorMessage", "session expired");
@@ -105,18 +91,90 @@ public class TransactionHandler implements HttpRequestHandler {
 					request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
 				}
 
-			} else if (path.equals("/transaction")) {
+			} 
+if (path.equals("/beneficiary")) {
+				
+				handleBeneficiaries(request, response);
+
+			} 
+		} catch (IOException | ServletException | SQLException | TaskException e) {
+			e.printStackTrace();
+			throw new TaskException(e.getMessage(), e);
+		}
+
+	}
+
+
+	@Override
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws TaskException {
+
+		try {
+			String path = request.getPathInfo();
+			if (path.equals("/transactions")) {
+				
+				handleViewTransaction(request, response);
+
+			} else if (path.equals("/deposit")) {
+				request.setAttribute("mode", "deposit");
 				HttpSession session = request.getSession(false);
 				if (session == null || session.getAttribute("personId") == null) {
 					request.setAttribute("errorMessage", "session expired");
 					request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
 
 				}
+				
+				request.setAttribute("page" , "deposit-withdraw");
+			if(session.getAttribute("role").equals("ADMIN"))
+				{
+					request.getRequestDispatcher("/bank/admin/dashboard").forward(request, response);
+				}
+				else if(session.getAttribute("role").equals("SUPERADMIN"))
+				{
+					request.getRequestDispatcher("/bank/superadmin/dashboard").forward(request, response);
+				}
+				else
+				{
+					request.setAttribute("errorMessage", "Access Restricted");
+					request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
+				}
+			} else if (path.equals("/withdraw")) {
+				request.setAttribute("mode", "withdraw");
+				HttpSession session = request.getSession(false);
+				if (session == null || session.getAttribute("personId") == null) {
+					request.setAttribute("errorMessage", "session expired");
+					request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
+
+				}
+				
+				request.setAttribute("page" , "deposit-withdraw");
+			if(session.getAttribute("role").equals("ADMIN"))
+				{
+					request.getRequestDispatcher("/bank/admin/dashboard").forward(request, response);
+				}
+				else if(session.getAttribute("role").equals("SUPERADMIN"))
+				{
+					request.getRequestDispatcher("/bank/superadmin/dashboard").forward(request, response);
+				}
+				else
+				{
+					request.setAttribute("errorMessage", "Access Restricted");
+					request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
+				}
+			}
+			else if (path.equals("/transaction")) {
+				HttpSession session = request.getSession(false);
+				if (session == null || session.getAttribute("personId") == null) {
+					request.setAttribute("errorMessage", "session expired");
+					request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
+
+				}
+				
 				request.setAttribute("page" , "transaction");
 				if(session.getAttribute("role").equals("CUSTOMER"))
 				{
 					request.getRequestDispatcher("/bank/customer/dashboard").forward(request, response);
 				}
+				
 				else if(session.getAttribute("role").equals("ADMIN"))
 				{
 					request.getRequestDispatcher("/bank/admin/dashboard").forward(request, response);
@@ -168,10 +226,37 @@ public class TransactionHandler implements HttpRequestHandler {
 
 	}
 
-	private List<Map<String, Object>>  handleTransactionHistory(HttpServletRequest request, HttpServletResponse response) throws IOException, TaskException, SQLException, ServletException {
+
+	private void handleBeneficiaries(HttpServletRequest request, HttpServletResponse response) throws IOException, TaskException, SQLException {
 		BufferedReader reader = request.getReader();
 		String jsonBody = reader.lines().collect(Collectors.joining());
 		JsonNode rootNode = mapper.readTree(jsonBody);
+		String accountNo = rootNode.path("account_no").asText();
+		
+		List<Map<String, Object>> recentAccounts = dao.getBeneficiaries(accountNo);
+
+
+		JSONArray jsonArray = new JSONArray();
+
+		for (Map<String, Object> account : recentAccounts) {
+		    JSONObject jsonObj = new JSONObject();
+		    for (Map.Entry<String, Object> entry : account.entrySet()) {
+		        jsonObj.put(entry.getKey(), entry.getValue());
+		    }
+		    jsonArray.put(jsonObj);
+		}
+		 
+      System.out.println("result" +jsonArray.toString());
+		    response.setContentType("application/json");
+		    response.setCharacterEncoding("UTF-8");
+		response.getWriter().write(jsonArray.toString());
+
+	}
+	
+	private List<Map<String, Object>>  handleTransactionHistory(HttpServletRequest request, HttpServletResponse response) throws IOException, TaskException, SQLException, ServletException {
+		//BufferedReader reader = request.getReader();
+		//String jsonBody = reader.lines().collect(Collectors.joining());
+		//JsonNode rootNode = mapper.readTree(jsonBody);
 	//	JsonNode accountNode = rootNode.path("account_no");
 		Long accountNo = null;
 		  String  accountNoParam = request.getParameter("account_no");
@@ -187,6 +272,7 @@ public class TransactionHandler implements HttpRequestHandler {
 				       request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
 				       return null;
 				   }
+				   System.out.println("jadsgkhsdfjdfsgskdfsv");
 				   accountNo = (Long) session.getAttribute("account_no");
 			}
 //		if (!accountNode.isMissingNode() && !accountNode.isNull() && accountNode.canConvertToLong()) {
@@ -196,11 +282,12 @@ public class TransactionHandler implements HttpRequestHandler {
 
 	
 		  request.setAttribute("accountNo", accountNo);
-
-		   String transactionStatus = rootNode.path("transaction_status").asText();
-		   if (transactionStatus == null || transactionStatus.isEmpty()) {
-			   transactionStatus = "SUCCESS";
-			} 
+			/*
+			 * String transactionStatus = rootNode.path("transaction_status").asText(); if
+			 * (transactionStatus == null || transactionStatus.isEmpty()) {
+			 * transactionStatus = "SUCCESS"; }
+			 */
+		  String transactionStatus  = request.getParameter("transaction_status")!=null ? request.getParameter("transaction_status") : "SUCCESS" ; 
 			int offset = Integer.parseInt(request.getParameter("offset") != null ? request.getParameter("offset") : "0");
 
 			

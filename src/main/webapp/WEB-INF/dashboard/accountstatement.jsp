@@ -12,45 +12,40 @@
 <body>
 <div class="section" id="statement">
   <h2 class="heading">Account Statement</h2>
+<form method="post" action="${pageContext.request.contextPath}/bank/history" id="statementform">
+  <input type="hidden" name="offset" value="0" id="offsetField" />
 
-  <form method="get" action="${pageContext.request.contextPath}/bank/history">
-   <input type="hidden" name="offset" value="0" id="offsetField" />
-  
-    <div class="input-group">
-  <p class="dropdown-label">Select Your Account</p>
-  
-  <c:choose>
-    <c:when test="${sessionScope.role == 'ADMIN' or sessionScope.role == 'SUPERADMIN'}">
-       <input type="text" name="account_no" value="${accountNo}" />
-    </c:when>
-    
-    <c:otherwise>
-      <select name="account_no">
-        <c:forEach var="accNo" items="${sessionScope.account_no_list}">
-          <option value="${accNo['account_no']}" 
-            <c:if test="${accountNo == accNo['account_no']}">selected</c:if>>
-            ${accNo['account_no']}
-          </option>
-        </c:forEach>
-      </select>
-    </c:otherwise>
-  </c:choose>
-</div>
+  <div class="input-group">
+    <p class="dropdown-label">Select Your Account</p>
+    <c:choose>
+      <c:when test="${sessionScope.role == 'ADMIN' or sessionScope.role == 'SUPERADMIN'}">
+        <input type="text" name="account_no" id = "account_no" value="${accountNo}" />
+      </c:when>
+      <c:otherwise>
+        <select name="account_no">
+          <c:forEach var="accNo" items="${sessionScope.account_no_list}">
+            <option value="${accNo['account_no']}" 
+              <c:if test="${accountNo == accNo['account_no']}">selected</c:if>>
+              ${accNo['account_no']}
+            </option>
+          </c:forEach>
+        </select>
+      </c:otherwise>
+    </c:choose>
+  </div>
 
-    <div class="input-group">
+  <div class="input-group">
     <label for="startDate">Start Date</label>
-    <input type="date" id="start_date" name="start_date" value="${param.startDate}" />
+    <input type="date" id="start_date" name="start_date" value="${param.start_date}" />
   </div>
 
   <div class="input-group">
     <label for="endDate">End Date</label>
-    <input type="date" id="end_date" name="end_date" value="${param.endDate}" />
+    <input type="date" id="end_date" name="end_date" value="${param.end_date}" />
   </div>
 
-    <button class="btn" type="submit">View Statement</button>
-    
-    
-  </form>
+  <button class="btn" type="submit">View Statement</button>
+</form>
 
   <div class="statement-table-container">
     <table class="statement-table" border="1" cellpadding="5" cellspacing="0">
@@ -85,20 +80,23 @@
       </tbody>
     </table>
   </div>
+<form method="post" action="${pageContext.request.contextPath}/bank/history" style="display: inline;">
+  <input type="hidden" name="account_no" value="${accountNo}" />
+  <input type="hidden" name="offset" value="${offset - 10}" />
+  <input type="hidden" name="start_date" value="${param.start_date}" />
+  <input type="hidden" name="end_date" value="${param.end_date}" />
+  <button class="btn" type="submit" ${!hasPrev ? "disabled" : ""}>Previous</button>
+</form>
 
-  <div class="pagination" style="margin-top: 10px;">
-    <form method="get" action="${pageContext.request.contextPath}/bank/history" style="display: inline;">
-      <input type="hidden" name="account_no" value="${accountNo}" />
-      <input type="hidden" name="offset" value="${offset - 10}" />
-      <button class="btn" type="submit" ${!hasPrev ? "disabled" : ""}>Previous</button>
-    </form>
 
-    <form method="get" action="${pageContext.request.contextPath}/bank/history" style="display: inline;">
-      <input type="hidden" name="account_no" value="${accountNo}" />
-      <input type="hidden" name="offset" value="${offset + 10}" />
-      <button class="btn" type="submit" ${!hasNext ? "disabled" : ""}>Next</button>
-    </form>
-  </div>
+<form method="post" action="${pageContext.request.contextPath}/bank/history" style="display: inline;">
+  <input type="hidden" name="account_no" value="${accountNo}" />
+  <input type="hidden" name="offset" value="${offset + 10}" />
+  <input type="hidden" name="start_date" value="${param.start_date}" />
+  <input type="hidden" name="end_date" value="${param.end_date}" />
+  <button class="btn" type="submit" ${!hasNext ? "disabled" : ""}>Next</button>
+</form>
+
 
 </div>
 </body>

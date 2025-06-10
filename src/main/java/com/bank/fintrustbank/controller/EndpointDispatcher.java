@@ -28,22 +28,23 @@ public class EndpointDispatcher {
 		try {
 		if (endpointConfig.containsKey(endpoint)) { 
 			String handlerClassName = endpointConfig.get(endpoint).get("handler");
-			System.out.println(handlerClassName);
+			System.out.println("handler class name"+handlerClassName);
 
 			
 				Class<?> handlerClass = Class.forName("com.bank.fintrustbank.handler." + handlerClassName);
 				HttpRequestHandler handler = (HttpRequestHandler) handlerClass.getDeclaredConstructor().newInstance();
-
+                System.out.println(request.getMethod());
 				switch ((request).getMethod()) {
 				case "GET":
 					handler.doGet(request, response);
 					break;
 				case "POST":
+					System.out.println("inside dispatch");
 					handler.doPost(request, response);
 					break;
 				case "PUT":
 					handler.doPut(request, response);
-					System.out.println("inside dispatch");
+				
 					break;
 				case "DELETE":
 					handler.doDelete(request, response);
@@ -54,7 +55,7 @@ public class EndpointDispatcher {
 			} 
 		 else {
 			request.setAttribute("errorMessage","Endpoint not found" );
-			 RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB_INF/error/error.jsp");
+			 RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/error/error.jsp");
 		        requestDispatcher.forward(request, response);
 		}
 	}

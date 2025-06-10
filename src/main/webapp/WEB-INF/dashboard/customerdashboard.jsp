@@ -18,7 +18,12 @@
         <li><a href="${pageContext.request.contextPath}/bank/customer/dashboard">Home</a></li>
         <li><a href="${pageContext.request.contextPath}/bank/allaccounts">My Accounts</a></li>
         <li><a href="${pageContext.request.contextPath}/bank/transaction">Transfer Money</a></li>
-        <li><a href="${pageContext.request.contextPath}/bank/history">Account Statement</a></li>
+    <li>
+  <form id="historyForm" method="post" action="${pageContext.request.contextPath}/bank/history" style="display: inline;">
+
+    <a href="#" onclick="document.getElementById('historyForm').submit(); return false;">Account Statement</a>
+  </form>
+</li>
         <li><a href="${pageContext.request.contextPath}/bank/customer/additional-account">Open New Account</a></li>
     </ul>
 </nav>

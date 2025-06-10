@@ -22,7 +22,13 @@ public class LoginHandler implements HttpRequestHandler {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws  TaskException {
 		
-		String path = request.getPathInfo();
+		//String path = request.getPathInfo();
+		//String path = request.getServletPath();
+		String path = request.getServletPath();
+		 if(path.startsWith("/bank"))
+		 {
+			path = request.getPathInfo();
+		 }
 		if (path.equals("/login")) {
 			  try {
 				  System.out.println("inside get");
@@ -39,7 +45,13 @@ public class LoginHandler implements HttpRequestHandler {
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws  TaskException {
 
-		String path = request.getPathInfo();
+		//String path = request.getPathInfo();
+		//String path = request.getServletPath();
+		String path = request.getServletPath();
+		 if(path.startsWith("/bank"))
+		 {
+			path = request.getPathInfo();
+		 }
 		System.out.println(path.equals("/login  inside post"));
 		try {
 		if (path.equals("/login")) {
@@ -52,7 +64,7 @@ public class LoginHandler implements HttpRequestHandler {
 //			
 		}
 		if (path.equals("/logout")) {
-			System.out.println("what to do ");
+			
 			handleLogOut(request, response);
 
 	}

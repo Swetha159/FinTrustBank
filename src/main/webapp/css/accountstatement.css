@@ -14,6 +14,9 @@ body {
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
   border-top: 6px solid #97144d;
   margin-top: 50px;
+  
+  margin-left : 600px ; 
+  margin-right : 600px; 
 }
 
 .heading {
@@ -116,6 +119,8 @@ body {
   border: 1px solid #ccc;
   border-radius: 12px;
   margin-top: 40px;
+  margin-left : 300px ; 
+  margin-right : 300px; 
 }
 
 .heading {
@@ -128,6 +133,7 @@ body {
   display: flex;
   flex-direction: column;
   margin-bottom: 15px;
+  margin-right : 600px ; 
 }
 
 .input-group label {
@@ -199,4 +205,5 @@ body {
 .download-btn {
   background-color: #444;
 }
+
 
