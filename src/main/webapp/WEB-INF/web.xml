@@ -40,12 +40,12 @@
   </filter-mapping>
   
   <filter>
-    <filter-name>RoleFilter</filter-name>
-    <filter-class>com.bank.fintrustbank.filter.RoleFilter</filter-class>
+    <filter-name>JwtAuthFilter</filter-name>
+    <filter-class>com.bank.fintrustbank.filter.JwtAuthFilter</filter-class>
   </filter>
   
   <filter-mapping>
-    <filter-name>RoleFilter</filter-name>
+    <filter-name>JwtAuthFilter</filter-name>
     <url-pattern>/bank/*</url-pattern>
   </filter-mapping>
 

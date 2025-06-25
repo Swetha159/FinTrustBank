@@ -2,7 +2,9 @@ package com.bank.fintrustbank.dao;
 
 import com.bank.fintrustbank.enums.AccountField;
 import com.bank.fintrustbank.enums.AccountRequestField;
+import com.bank.fintrustbank.enums.BranchField;
 import com.bank.fintrustbank.enums.PersonField;
+import com.bank.fintrustbank.enums.PrivilegedUserField;
 import com.bank.fintrustbank.enums.TransactionField;
 import com.zoho.training.exceptions.TaskException;
 
@@ -16,17 +18,30 @@ public class test {
 	{
 		  try {
 			  Long accountNo = 101203705548L; 
-				Query  getAccounts  = new QueryBuilder() 
-						.select(PersonField.NAME , TransactionField.TRANSACTION_ACCOUNT_NO).max(TransactionField.DATE_TIME, "latest_transaction")
-						.from(TransactionField.ROW_ID)
-						.join("INNER", AccountField.ACCOUNT_NO, new OnClause(TransactionField.TRANSACTION_ACCOUNT_NO,"=" , AccountField.ACCOUNT_NO))
-						.join("INNER", PersonField.PERSON_ID, new OnClause(AccountField.CUSTOMER_ID,"=" , PersonField.PERSON_ID))
-						.where(TransactionField.ACCOUNT_NO, "=", accountNo)
-						.groupBy(TransactionField.TRANSACTION_ACCOUNT_NO)
-						.groupBy(PersonField.NAME)
-						.orderBy("latest_transaction", false)
-						.limit(20)
-						.build() ;
+				Query  getAccounts  =  new QueryBuilder()
+				        .select(
+					            AccountField.CUSTOMER_ID,
+					           PersonField.NAME.withAlias("customer"),
+					            AccountField.ACCOUNT_NO,
+					            AccountField.ACCOUNT_TYPE,
+					            AccountField.BALANCE,
+					            AccountField.ACCOUNT_STATUS,
+					            AccountField.CREATED_AT,
+					            AccountField.MODIFIED_AT,
+					            AccountField.MODIFIED_BY,
+					            PersonField.NAME.withAlias("modifier").as("modifier_name")
+					  
+					        )
+					        .from(AccountField.ACCOUNT_NO)
+					       
+					        .join("INNER", PersonField.PERSON_ID , "customer",
+					            new OnClause(PersonField.PERSON_ID.withAlias("customer"), "=", AccountField.CUSTOMER_ID )
+					        )
+					        .join("INNER",PersonField.PERSON_ID, "modifier",
+					            new OnClause(AccountField.MODIFIED_BY, "=", PersonField.PERSON_ID.withAlias("modifier"))
+					        )
+					        .where(AccountField.BRANCH_ID, "=", "101")
+					        .build();
 			System.out.println(getAccounts.getQuery()) ; 
 		} catch (TaskException e) {
 			// TODO Auto-generated catch block

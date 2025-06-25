@@ -22,6 +22,7 @@ public class QueryExecutor {
 
 	public int execute(String query, List<Object> values) throws SQLException {
 		int rowAffected = 0;
+		long dbStart = System.currentTimeMillis();
 		Connection conn = (connection != null) ? connection : dataSource.getConnection();
 		try (PreparedStatement statement = conn.prepareStatement(query)) {
 
@@ -34,8 +35,11 @@ public class QueryExecutor {
 			e.printStackTrace();
 		}finally {
 	        if (connection == null) {
-	            conn.close(); // close only if not in transaction
+	            conn.close(); 
 	        }
+
+			long dbEnd = System.currentTimeMillis();
+			System.out.println("DB Query Time: " + (dbEnd - dbStart) + " ms");
 		}
 		return rowAffected;
 	}

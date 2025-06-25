@@ -1,4 +1,4 @@
-package com.bank.fintrustbank.service;
+package com.bank.fintrustbank.util;
 
 import java.util.Random;
 

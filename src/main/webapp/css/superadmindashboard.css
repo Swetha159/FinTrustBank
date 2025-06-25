@@ -29,13 +29,12 @@ body {
 }
 
 
-/* Navbar container */
 .dashboard-navbar {
   display: none;
   flex-direction: column;
   background-color: #97144d;
   color: white;
-  padding-top: 60px; /* For space below fixed header if needed */
+  padding-top: 60px; 
   position: fixed;
   top: 0;
   left: 0;

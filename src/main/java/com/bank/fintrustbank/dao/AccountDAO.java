@@ -20,7 +20,7 @@ import querybuilder.QueryBuilder;
 
 public class AccountDAO {
 
-	QueryExecutor qe = new QueryExecutor();
+	private final QueryExecutor qe = new QueryExecutor();
 
 	public boolean addAccount(Account account) throws TaskException, SQLException {
 
@@ -50,7 +50,7 @@ public class AccountDAO {
 			throws TaskException {
 		Query updateStatusQuery = new QueryBuilder().update(AccountField.ACCOUNT_NO).set(AccountField.ACCOUNT_STATUS, status)
 				.set(AccountField.MODIFIED_AT, modifiedAt).set(AccountField.MODIFIED_BY, sessionPersonId)
-				.where(AccountField.CUSTOMER_ID, "=", "customerId").build();
+				.where(AccountField.CUSTOMER_ID, "=", customerId).build();
 		return updateStatusQuery;
 	}
 
@@ -137,7 +137,7 @@ public class AccountDAO {
 //				.join("INNER", "person", "modifier", new OnClause("account.modified_by", "=", "modifier.person_id"))
 //				.where("branch_id", "=", branchId).build();
 
-		
+		System.out.println(branchId) ; 
 		Query getAccounts = new QueryBuilder()
 		        .select(
 		            AccountField.CUSTOMER_ID,
@@ -149,7 +149,7 @@ public class AccountDAO {
 		            AccountField.CREATED_AT,
 		            AccountField.MODIFIED_AT,
 		            AccountField.MODIFIED_BY,
-		            PersonField.NAME.withAlias("modifier")
+		            PersonField.NAME.withAlias("modifier").as("modifier_name")
 		  
 		        )
 		        .from(AccountField.ACCOUNT_NO)
@@ -160,7 +160,7 @@ public class AccountDAO {
 		        .join("INNER",PersonField.PERSON_ID, "modifier",
 		            new OnClause(AccountField.MODIFIED_BY, "=", PersonField.PERSON_ID.withAlias("modifier"))
 		        )
-		        .where(AccountField.BRANCH_ID, "=", "101")
+		        .where(AccountField.BRANCH_ID, "=", branchId)
 		        .build();
 		List<Map<String, Object>> result = qe.executeQuery(getAccounts.getQuery(), getAccounts.getValues());
 		System.out.println(result);

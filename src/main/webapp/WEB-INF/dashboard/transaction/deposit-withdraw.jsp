@@ -18,7 +18,7 @@
       <input type="hidden" id="transaction_type" name="transaction_type"
              value="${requestScope.mode == 'deposit' ? 'credit' : 'debit'}" />
       <p style="margin-top: 6px;">
-        ${requestScope.mode == 'deposit' ? 'deposit' : 'withdraw'}
+        ${requestScope.mode == 'deposit' ? 'Deposit' : 'Withdraw'}
       </p>
     </div>
   </c:when>
@@ -33,10 +33,9 @@
     </div>
   </c:otherwise>
 </c:choose>
-		<c:if test="${sessionScope.role == 'ADMIN' or sessionScope.role == 'SUPERADMIN'}">
+		<c:if test="${role == 'ADMIN' or role == 'SUPERADMIN'}">
 			<div class="input-group">
-				<label for="account_no">Account Number</label>
-				<input type="text" id="account_no" name="account_no" value="${requestScope.account_no}" required>
+				<input type="text" id="account_no" name="account_no"  placeholder="ACCOUNT NO" value="${requestScope.account_no}" required>
 			</div>
 
 			

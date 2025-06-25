@@ -11,11 +11,21 @@
 
   <script>
     document.getElementById('alertCloseBtn').onclick = function() {
+ 
       document.getElementById('alertModal').style.display = 'none';
+
+      const url = new URL(window.location);
+      url.searchParams.delete("alertMessage");
+      window.history.replaceState({}, document.title, url);
     };
+
     window.onclick = function(event) {
       if (event.target == document.getElementById('alertModal')) {
         document.getElementById('alertModal').style.display = 'none';
+
+        const url = new URL(window.location);
+        url.searchParams.delete("alertMessage");
+        window.history.replaceState({}, document.title, url);
       }
     };
   </script>

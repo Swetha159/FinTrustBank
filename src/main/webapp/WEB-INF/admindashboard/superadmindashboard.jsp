@@ -16,11 +16,17 @@
         <li>FINTRUST</li>
         <li><a href="${pageContext.request.contextPath}/bank/superadmin/dashboard">Home</a></li>
         <li><a href="${pageContext.request.contextPath}/bank/admins">Admins</a></li>
+         <li><a href="${pageContext.request.contextPath}/bank/branch-accounts">Accounts</a></li>
+		<li><a href="${pageContext.request.contextPath}/bank/superadmins">Superadmins</a></li>
         <li><a href="${pageContext.request.contextPath}/bank/branches">Branches</a></li>
         <li><a href="${pageContext.request.contextPath}/bank/admin/requests">Account Requests</a></li>
         <li><a href="${pageContext.request.contextPath}/bank/customers">Customers</a></li>
         <li><a href="${pageContext.request.contextPath}/bank/transaction">Transfer Money</a></li>
-        <li><a href="${pageContext.request.contextPath}/bank/history">Account Statement</a></li>
+         <li>
+  <form id="historyForm" method="post" action="${pageContext.request.contextPath}/bank/history" style="display: inline;">
+    <a href="#" onclick="document.getElementById('historyForm').submit(); return false;">Account Statement</a>
+  </form>
+</li>
         <li><a href="${pageContext.request.contextPath}/bank/admin/additional-account">Additional Account Creation</a></li>
         <li><a href="${pageContext.request.contextPath}/bank/account-request">New Account Creation</a></li>
     </ul>
@@ -40,6 +46,12 @@
     </c:when>
     <c:when test="${pageAttr == 'customers'}">
         <jsp:include page="customers.jsp" />
+    </c:when>
+     <c:when test="${pageAttr == 'accounts'}">
+        <jsp:include page="accounts.jsp" />
+    </c:when>
+     <c:when test="${pageAttr == 'superadmins'}">
+        <jsp:include page="superadmins.jsp" />
     </c:when>
     <c:when test="${pageAttr == 'additional-account'}">
         <jsp:include page="../dashboard/additional-account.jsp" />

@@ -43,7 +43,6 @@
   <div class="cards-wrapper">
     <div class="cards">
       <div class="card">
-        <img src="img_avatar.png" alt="Avatar" style="width:100%">
         <div class="container">
           <h4><b>Salary Account</b></h4> 
           <p>Special Account for employees to receive monthly salaries</p> 
@@ -52,7 +51,6 @@
       </div>
 
       <div class="card">
-        <img src="img_avatar.png" alt="Avatar" style="width:100%">
         <div class="container">
           <h4><b>Savings Account</b></h4> 
           <p>Ideal for individuals to save money</p> 
@@ -61,7 +59,6 @@
       </div>
 
       <div class="card">
-        <img src="img_avatar.png" alt="Avatar" style="width:100%">
         <div class="container">
           <h4><b>Current Account</b></h4> 
           <p>Designed for business and traders. Unlimited Transactions</p> 

@@ -22,7 +22,7 @@ import querybuilder.QueryBuilder;
 
 public class TransactionDAO {
 
-	QueryExecutor qe = new QueryExecutor();
+	private final QueryExecutor qe = new QueryExecutor();
 
 	public Query insertTransaction(Transaction transaction) throws TaskException {
 

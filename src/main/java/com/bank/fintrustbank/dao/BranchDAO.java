@@ -19,8 +19,9 @@ import querybuilder.QueryBuilder;
 
 public class BranchDAO {
 
-	QueryExecutor qe = new QueryExecutor();
+	private final QueryExecutor qe = new QueryExecutor();
 
+	
 	public boolean addBranch(Branch branch) throws TaskException, SQLException {
 
 		Query insertQuery = new QueryBuilder()
@@ -67,9 +68,9 @@ public class BranchDAO {
 
 	}
 
-	public Query getUpdateAdminQuery(String branchId, String personId) throws TaskException {
+	public Query getUpdateAdminQuery(String branchId, String personId, Long modifiedAt ,String sessionPersonId ) throws TaskException {
 
-		Query updateAdminQuery = new QueryBuilder().update(BranchField.BRANCH_ID).set(BranchField.MANAGER_ID, personId)
+		Query updateAdminQuery = new QueryBuilder().update(BranchField.BRANCH_ID).set(BranchField.MANAGER_ID, personId) .set(BranchField.MODIFIED_AT, modifiedAt).set(BranchField.MODIFIED_BY, sessionPersonId)
 				.where(BranchField.BRANCH_ID, "=", branchId).build();
 		return updateAdminQuery;
 	}
@@ -88,7 +89,7 @@ public class BranchDAO {
 				.select(BranchField.BRANCH_ID,  BranchField.LOCATION,  BranchField.IFSC_CODE, BranchField.MANAGER_ID, PersonField.NAME.withAlias("manager"), BranchField.CREATED_AT,
 						BranchField.MODIFIED_AT, BranchField.MODIFIED_BY,  PersonField.NAME.withAlias("modifier").as("modifier_name"))
 				.from(BranchField.BRANCH_ID)
-				.join("INNER", PersonField.PERSON_ID, "manager", new OnClause(BranchField.MANAGER_ID, "=", PersonField.PERSON_ID.withAlias("manager")))
+				.join("LEFT", PersonField.PERSON_ID, "manager", new OnClause(BranchField.MANAGER_ID, "=", PersonField.PERSON_ID.withAlias("manager")))
 				.join("INNER", PersonField.PERSON_ID, "modifier", new OnClause(BranchField.MODIFIED_BY, "=",PersonField.PERSON_ID.withAlias("modifier")))
 				.build();
 
@@ -179,6 +180,44 @@ public class BranchDAO {
 
 		
 				
+	}
+
+	public Query removeManager(String personId) throws TaskException, SQLException {
+		
+		String branchId = getBranchId(personId);
+		
+		
+		
+		Query removeManager = new QueryBuilder()
+				.update(BranchField.BRANCH_ID)
+				.set(BranchField.MANAGER_ID ,null)
+				.where(BranchField.BRANCH_ID, "=", branchId)
+				.build();
+	
+		
+		
+		return removeManager;
+	}
+
+	private String getBranchId(String personId) throws TaskException, SQLException {
+		
+		Query getBranchId = new QueryBuilder()
+				.select(BranchField.BRANCH_ID)
+				.from(BranchField.BRANCH_ID)
+				.where(BranchField.MANAGER_ID,"=", personId)
+				.build();
+		List<Map<String, Object>> result = qe.executeQuery(getBranchId.getQuery(), getBranchId.getValues());
+		System.out.println(getBranchId.getQuery()+ getBranchId.getValues());
+		System.out.println(result);
+		if (result.isEmpty()) {
+			return null;
+		}
+		else
+		{
+			String branchId = (String) result.get(0).get("branch_id") ;
+			return branchId ; 
+		}
+		
 	}
 
 

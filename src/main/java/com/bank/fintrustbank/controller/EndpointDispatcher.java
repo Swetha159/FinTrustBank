@@ -44,7 +44,6 @@ public class EndpointDispatcher {
 					break;
 				case "PUT":
 					handler.doPut(request, response);
-				
 					break;
 				case "DELETE":
 					handler.doDelete(request, response);

@@ -10,7 +10,6 @@ import com.bank.fintrustbank.exception.TaskException;
 
 public class ConfigFileTest {
 	public static void main(String args[]) throws TaskException,IOException
-	
 	{
 //		File file = new File("config.properties");
 //		PropertiesHelper helper = new PropertiesHelper();

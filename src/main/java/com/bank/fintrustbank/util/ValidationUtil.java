@@ -1,5 +1,9 @@
 package com.bank.fintrustbank.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class ValidationUtil{
 
     public static boolean isValidEmail(String email) {
@@ -25,6 +29,40 @@ public class ValidationUtil{
     public static boolean isValidPassword(String password) {
         return password != null && password.length() >= 6;
     }
+    public static boolean isValidAccountNo(Long acc) {
+        return acc != null && String.valueOf(acc).matches("^\\d{12}$");
+    }
 
+    public static boolean isValidDate(String date) {
+        if (date == null || date.isEmpty()) {
+            return false;
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        sdf.setLenient(false); // Strict parsing
+
+        try {
+            sdf.parse(date);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
+    }
+
+    public static boolean isValidDateRange(String startDate, String endDate) {
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date start = sdf.parse(startDate);
+            Date end = sdf.parse(endDate);
+
+            return !end.before(start);
+        } catch (ParseException e) {
+            return false;
+        }
+    }
+
+
+    
     // You can add more validators here (e.g., date, gender, etc.)
 }

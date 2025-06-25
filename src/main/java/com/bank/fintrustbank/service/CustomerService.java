@@ -11,9 +11,9 @@ import querybuilder.Query;
 
 public class CustomerService {
 	
-	PersonDAO personDAO = new PersonDAO();
-	AccountDAO accountDAO = new AccountDAO();
-	QueryExecutor qe = new QueryExecutor();
+	private final PersonDAO personDAO = new PersonDAO();
+	private final AccountDAO accountDAO = new AccountDAO();
+	private final QueryExecutor qe = new QueryExecutor();
 	
 	
 	public boolean updateCustomerStatus(String status, String personId, Long modifiedAt, String sessionPersonId) throws TaskException {
@@ -21,11 +21,11 @@ public class CustomerService {
 		try {
 			qe.beginTransaction();
 
-			Query updateAccountStatusQuery = accountDAO.getUpdateStatusQuery(status,personId,modifiedAt,sessionPersonId);
+			Query updateAccountStatusQuery = accountDAO.getUpdateStatusQuery(personId,status , modifiedAt,sessionPersonId);
 			int accountResult = qe.execute(updateAccountStatusQuery.getQuery(), updateAccountStatusQuery.getValues());
 			Query updatePersonStatusQuery = personDAO.getUpdateStatusQuery(personId, status, modifiedAt, sessionPersonId);
 			int personResult = qe.execute(updatePersonStatusQuery.getQuery(), updatePersonStatusQuery.getValues());
-			if (accountResult == 1 && personResult == 1) {
+			if (accountResult != 0 && personResult != 0) {
 				qe.commitTransaction();
 				return true;
 			} else {

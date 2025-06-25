@@ -14,7 +14,7 @@ import querybuilder.QueryBuilder;
 
 public class ResetTokenDAO {
 
-	QueryExecutor qe = new QueryExecutor();
+	private final QueryExecutor qe = new QueryExecutor();
 
 	public boolean saveToken(ResetToken resetToken) throws SQLException, TaskException {
 
@@ -23,7 +23,10 @@ public class ResetTokenDAO {
 				.build();
 
 		System.out.println(saveTokenQuery.getQuery());
+	
 		int result = qe.execute(saveTokenQuery.getQuery(), saveTokenQuery.getValues());
+	
+
 		System.out.println(result);
 		if (result > 0) {
 			return true;

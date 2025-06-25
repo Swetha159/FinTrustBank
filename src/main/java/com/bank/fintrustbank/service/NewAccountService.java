@@ -15,10 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 public class NewAccountService {
 
-	PersonDAO personDAO = new PersonDAO();
-	AccountDAO accountDAO = new AccountDAO();
-	AccountRequestDAO requestDAO = new AccountRequestDAO();
-	QueryExecutor qe = new QueryExecutor();
+	private final PersonDAO personDAO = new PersonDAO();
+	private final AccountDAO accountDAO = new AccountDAO();
+	private final AccountRequestDAO requestDAO = new AccountRequestDAO();
+	private final QueryExecutor qe = new QueryExecutor();
 	public boolean createNewCustomerWithAccount(Person person ,Account account) throws TaskException, SQLException
 	{
 		List<Query> queryList = new ArrayList<>();

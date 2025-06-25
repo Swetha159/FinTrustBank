@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.bank.fintrustbank.enums.AccountField;
+import com.bank.fintrustbank.enums.BranchField;
 import com.bank.fintrustbank.enums.PersonField;
 import com.bank.fintrustbank.enums.PrivilegedUserField;
 import com.bank.fintrustbank.model.Person;
@@ -19,12 +20,12 @@ import querybuilder.QueryBuilder;
 
 public class PersonDAO {
 
-	QueryExecutor qe = new QueryExecutor();
+	private final QueryExecutor qe = new QueryExecutor();
 
 	public Person checkCredentials(String email, String password) throws SQLException, TaskException {
 
 		System.out.println(email + password);
-		Query loginQuery = new QueryBuilder().select(PersonField.PERSON_ID, PersonField.ROLE,PersonField.PASSWORD, PersonField.STATUS).from(PersonField.PERSON_ID)
+		Query loginQuery = new QueryBuilder().select(PersonField.PERSON_ID, PersonField.NAME,PersonField.ROLE,PersonField.PASSWORD, PersonField.STATUS).from(PersonField.PERSON_ID)
 				.where(PersonField.EMAIL, "=", email).build();
 
 		System.out.println(loginQuery.getQuery());
@@ -54,6 +55,7 @@ public class PersonDAO {
 		}
 
 	}
+	
 
 	public boolean addNewCustomer(Person person) throws TaskException, SQLException {
 
@@ -203,6 +205,28 @@ public class PersonDAO {
 		return result ; 
 	}
 	
+	
+	public List<Map<String, Object>> getSuperAdmins () throws TaskException, SQLException
+	{
+		Query getSuperAdmins = new QueryBuilder()
+				.select(PersonField.PERSON_ID ,PersonField.NAME,PersonField.EMAIL,PersonField.PHONE_NUMBER,PersonField.STATUS  ,BranchField.BRANCH_ID , BranchField.LOCATION )				
+				.from(PersonField.PERSON_ID)
+				.join("INNER",PrivilegedUserField.ADMIN_ID, new OnClause(PersonField.PERSON_ID,"=",PrivilegedUserField.ADMIN_ID))
+				.join("LEFT", BranchField.BRANCH_ID, new OnClause(PrivilegedUserField.BRANCH_ID,"=",BranchField.BRANCH_ID))
+			    .where(PersonField.ROLE, "=", "SUPERADMIN")
+				.build();
+		
+		
+		System.out.println(getSuperAdmins.getQuery());
+		List<Map<String, Object>> result = qe.executeQuery(getSuperAdmins.getQuery(), getSuperAdmins.getValues());
+	
+		if(result.isEmpty())
+		{
+			return null ; 
+		}
+		return result ; 
+		
+	}
 	public boolean updatePassword(String email , String hashedPassword) throws TaskException, SQLException
 	{
 		
@@ -220,5 +244,44 @@ public class PersonDAO {
 		return false;
 		
 	}
+	
+	public String getRole(String personId) throws TaskException, SQLException
+	{
+		Query role = new QueryBuilder()
+	.select(PersonField.ROLE)
+	.from(PersonField.PERSON_ID)
+	.where(PersonField.PERSON_ID,"=", personId)
+	.build();
+	
+		System.out.println(role .getQuery());
+		List<Map<String, Object>> result = qe.executeQuery(role .getQuery(), role .getValues());
+	
+		if(!result.isEmpty())
+		{
+			String userRole  =  (String) result.get(0).get("role");
+			return userRole;
+		}
+		return null ;
+	}
+
+
+	public boolean ifexist(String email) throws TaskException, SQLException {
+	    Query exist = new QueryBuilder()
+	        .select(PersonField.PERSON_ID)
+	        .from(PersonField.PERSON_ID)
+	        .where(PersonField.EMAIL, "=", email)
+	        .build();
+
+	    System.out.println(exist.getQuery());
+	    List<Map<String, Object>> result = qe.executeQuery(exist.getQuery(), exist.getValues());
+
+	    String id = null;
+	    if (!result.isEmpty()) {
+	        id = (String) result.get(0).get("person_id"); 
+	    }
+
+	    return id != null && !id.isEmpty(); 
+	}
+
 	
 }

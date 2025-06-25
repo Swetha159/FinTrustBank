@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,11 +9,15 @@
   <link rel="stylesheet" href="<%= request.getContextPath() %>/css/login.css">
 </head>
 <body>
+<c:if test="${not empty alertMessage}">
   <jsp:include page="/WEB-INF/views/alert.jsp" />
+</c:if>
+
   <div class="card">
     <div class="login-container">
       <h2>Login</h2>
-      <form  id= "loginform" >
+      <form id="loginform" method="post" action="${pageContext.request.contextPath}/login">
+      
         <div class="input-group">
           <input type="text" id="email" name="email" required>
           <label for="email">Email</label>
@@ -29,59 +34,48 @@
       
       <div class="login-links">
         <p>Don't have an account?</p>
-        <a href="#">Create New Account</a>
+        <a href="${pageContext.request.contextPath}/account-request">Create New Account</a>
       </div>
     </div>
   </div>
-  <script type="text/javascript">
-  document.getElementById("loginform").addEventListener("submit", function(e) {
-      e.preventDefault(); 
-      
+<%-- <script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("loginform").addEventListener("submit", function(e) {
+      e.preventDefault();
 
       const form = e.target;
       const data = {
-          email: form.email.value,
-          password : form.password.value 
+        email: form.email.value,
+        password: form.password.value
       };
 
       fetch("<%= request.getContextPath() %>/login", {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json"
-          },
-          body: JSON.stringify(data)
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
       })
       .then(response => {
-    if (response.type === 'opaqueredirect') {
-        window.location.reload();
-    } else if (response.status === 302 || response.status === 301) {
-        const redirectUrl = response.headers.get("Location");
-        if (redirectUrl) {
-            window.location.href = redirectUrl;
-        } else {
-            window.location.reload();
+        if (!response.ok) {
+          throw new Error("Login failed");
         }
-    } else {
         return response.json();
-    }
-})
-.then(result => {
-    if (result) {
+      })
+      .then(result => {
         if (result.success) {
-            window.location.href = result.redirectUrl;
+          window.location.href = result.redirectUrl;
         } else {
-            alert(result.message);
+          alert(result.message || "Login failed");
         }
-    }
-})
+      })
       .catch(error => {
-          console.error("Fetch error:", error);
-          alert("Error communicating with the server.");
+        console.error("Fetch error:", error);
+        alert("Incorrect email or password.");
       });
-  }); 
-  
-  
-  
-  </script>
+    });
+  });
+</script> --%>
+
 </body>
 </html>

@@ -18,6 +18,7 @@
         <li><a href="${pageContext.request.contextPath}/bank/admin/dashboard">Home</a></li>
         <li><a href="${pageContext.request.contextPath}/bank/admin/requests">Account Requests</a></li>
         <li><a href="${pageContext.request.contextPath}/bank/customers">Customers</a></li>
+          <li><a href="${pageContext.request.contextPath}/bank/branch-accounts">Accounts</a></li>
         <li><a href="${pageContext.request.contextPath}/bank/transaction">Transfer Money</a></li>
           <li><a href="${pageContext.request.contextPath}/bank/withdraw"> Withdraw </a></li>
             <li><a href="${pageContext.request.contextPath}/bank/deposit"> Deposit </a></li>
@@ -44,6 +45,9 @@
     </c:when>
     <c:when test="${pageAttr == 'customers'}">
         <jsp:include page="customers.jsp" />
+    </c:when>
+     <c:when test="${pageAttr == 'accounts'}">
+        <jsp:include page="accounts.jsp" />
     </c:when>
     <c:when test="${pageAttr == 'additional-account'}">
         <jsp:include page="../dashboard/additional-account.jsp" />

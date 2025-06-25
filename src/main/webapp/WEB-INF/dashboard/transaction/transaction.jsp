@@ -11,7 +11,15 @@
 
 </head>
 <body>
-
+<c:if test="${not empty errorList}">
+  <div style="color:red;">
+    <ul>
+      <c:forEach var="err" items="${errorList}">
+        <li>${err}</li>
+      </c:forEach>
+    </ul>
+  </div>
+</c:if>
 	<div class="section" id="transaction">
 		<h2 class="heading">Transaction</h2>
 
@@ -20,7 +28,7 @@
 			Transaction
 		</label>
 		
-		<c:if test="${sessionScope.role == 'CUSTOMER'}">
+		<c:if test="${role == 'CUSTOMER'}">
   <label class="checkbox-label">
     <input type="checkbox" id="self_transfer" name="selfTransfer" value="true"> Self Transfer
   </label>
@@ -28,14 +36,14 @@
 		<div class="input-group">
 			<c:choose>
 				<c:when
-					test="${sessionScope.role == 'ADMIN' or sessionScope.role == 'SUPERADMIN'}">
+					test="${role == 'ADMIN' or role == 'SUPERADMIN'}">
 					<input type="text" id="account_no" name="accountNo" required>
 					<label for="accountNo">Account No</label>
 				</c:when>
 				<c:otherwise>
 					<p class="dropdown-label">Account Number</p>
 					<select id="account_no" name="account_no" required>
-						<c:forEach var="accNo" items="${sessionScope.account_no_list}">
+						<c:forEach var="accNo" items="${account_no_list}">
 							<option value="${accNo['account_no']}">${accNo['account_no']}</option>
 						</c:forEach>
 					</select>
@@ -44,7 +52,7 @@
 		</div>
 	<div class="input-group" id="transaction_account_group">
   <c:choose>
-    <c:when test="${sessionScope.role == 'CUSTOMER'}">
+    <c:when test="${role == 'CUSTOMER'}">
       <div id="selfTransactionWrapper">
         <input type="text" id="transaction_account_no" list="recentAccounts" required> 
         <label for="transaction_account_no">Transaction Account No</label>
@@ -53,7 +61,7 @@
 
       <div id="selfAccountSelectWrapper" style="display: none;">
         <select id="self_account_no" required>
-          <c:forEach var="accNo" items="${sessionScope.account_no_list}">
+          <c:forEach var="accNo" items="${account_no_list}">
             <option value="${accNo['account_no']}">${accNo['account_no']}</option>
           </c:forEach>
         </select>
@@ -92,12 +100,14 @@
 
 	</div>
 	<script>
+	
   document.addEventListener("DOMContentLoaded", function () {
     const amountInput = document.getElementById("amount");
     amountInput.addEventListener("input", function () {
       this.value = this.value.replace(/[^\d.]/g, ''); 
     });
   });
+  
   document.addEventListener("DOMContentLoaded", function () {
 	    const amountInput = document.getElementById("transaction_account_no");
 	    amountInput.addEventListener("input", function () {
@@ -116,48 +126,7 @@
 	  ifscGroup.style.display = checkbox.checked ? "block" : "none";
 	});
 
-  function submitTransaction() {
-	  const isSelfTransfer = document.getElementById("self_transfer")?.checked;
-	  const account_no = document.getElementById("account_no").value;
-	  const transaction_account_no = isSelfTransfer
-	    ? document.getElementById("self_account_no").value
-	    : document.getElementById("transaction_account_no").value;
 
-	  if (account_no === transaction_account_no) {
-	    alert("Sender and receiver account numbers cannot be the same.");
-	    return;
-	  }
-
-	  const data = {
-	    other_bank: document.getElementById("other_bank").checked,
-	    transaction_account_no: transaction_account_no,
-	    ifsc_code: document.getElementById("ifsc_code").value,
-	    amount: document.getElementById("amount").value,
-	    description: document.getElementById("description").value,
-	    account_no: account_no,
-	    transaction_type: document.getElementById("transaction_type").value
-	  };
-
-	    fetch("${pageContext.request.contextPath}/bank/transaction", {
-	      method: "POST",
-	      headers: {
-	        "Content-Type": "application/json"
-	      },
-	      body: JSON.stringify(data)
-	    })
-	    .then(response => {
-	      if (response.ok) {
-	        alert("Transaction successful");
-	      
-	      } else {
-	        alert("Transaction failed");
-	      }
-	    })
-	    .catch(error => {
-	      console.error("Error:", error);
-	      alert("Something went wrong");
-	    });
-	  }
   document.addEventListener("DOMContentLoaded", function () {
 	  const accountNoInput = document.getElementById("account_no");
 	  const dataList = document.getElementById("recentAccounts");
@@ -188,7 +157,7 @@
 	        data.forEach(account => {
 	        	  const option = document.createElement("option");  
 	        	  option.value = account.transaction_account_no;
-		            option.textContent = account.name.trim();      
+		            option.textContent = account.name.trim()+"-"+account.transaction_account_no;      
 		            console.log("Adding option:", option.value, "Text:", option.textContent);
 		            dataList.appendChild(option);
 	        	  console.log("option:", option);
@@ -215,6 +184,7 @@
       }
     });
   }
+  
   document.addEventListener("DOMContentLoaded", function () {
 	  const selfCheckbox = document.getElementById("self_transfer");
 	  const otherBankCheckbox = document.getElementById("other_bank");
@@ -229,7 +199,7 @@
 	  if (selfWrapper) selfWrapper.style.display = "block";
 	  if (selectWrapper) selectWrapper.style.display = "none";
 
-	  if (selfCheckbox) {
+	  if (selfCheckbox) { 
 	    selfCheckbox.addEventListener("change", function () {
 	      if (this.checked) {
 	        selfWrapper.style.display = "none";
@@ -241,11 +211,12 @@
 	        }
 	        if (ifscGroup) ifscGroup.style.display = "none";
 	      } else {
+	    	  
 	        selfWrapper.style.display = "block";
 	        selectWrapper.style.display = "none";
-
 	        if (otherBankCheckbox) otherBankCheckbox.parentElement.style.display = "block";
 	        if (otherBankCheckbox?.checked) ifscGroup.style.display = "block";
+	        
 	      }
 	    });
 	  }
@@ -264,9 +235,78 @@
 	    });
 	  }
 	});
+  
+  function isValidAccountNumber(accountNo) {
+    return /^\d{12}$/.test(accountNo); 
+  }
+
+  function submitTransaction() {
+    const isSelfTransfer = document.getElementById("self_transfer")?.checked;
+    const account_no = document.getElementById("account_no").value.trim();
+    const transaction_account_no = isSelfTransfer
+      ? document.getElementById("self_account_no").value.trim()
+      : document.getElementById("transaction_account_no").value.trim();
+    const ifsc = document.getElementById("ifsc_code").value.trim();
+    const amount = document.getElementById("amount").value.trim();
+    const description = document.getElementById("description").value.trim();
+
+    if (!isValidAccountNumber(account_no)) {
+      alert("Sender account number must be exactly 12 digits.");
+      return;
+    }
+
+    if (!isValidAccountNumber(transaction_account_no)) {
+      alert("Receiver account number must be exactly 12 digits.");
+      return;
+    }
+
+    if (account_no === transaction_account_no) {
+      alert("Sender and receiver account numbers cannot be the same.");
+      return;
+    }
+    if (amount === "" || isNaN(amount) || parseFloat(amount) <= 0) {
+      alert("Please enter a valid amount.");
+      return;
+    }
+
+    if (description === "") {
+      alert("Please enter a description.");
+      return;
+    }
+ 
+    const data = {
+      other_bank: document.getElementById("other_bank").checked,
+      transaction_account_no: transaction_account_no,
+      ifsc_code: ifsc,
+      amount: amount,
+      description: description,
+      account_no: account_no,
+      transaction_type: document.getElementById("transaction_type").value
+    };
+
+    fetch("${pageContext.request.contextPath}/bank/transaction", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => {
+      if (response.ok) {
+        alert("Transaction successful");
+       
+      } else {
+        alert("Transaction failed");
+      }
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("Something went wrong");
+    });
+  }
+  </script>
 
 
-</script>
 
 </body>
 </html>

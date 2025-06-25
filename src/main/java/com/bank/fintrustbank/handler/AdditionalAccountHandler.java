@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.bank.fintrustbank.dao.AccountDAO;
 import com.bank.fintrustbank.dao.BranchDAO;
@@ -27,7 +26,7 @@ public class AdditionalAccountHandler implements HttpRequestHandler {
 	        .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
 	        .findAndRegisterModules();
 
-	private static final AccountDAO accountDAO = new AccountDAO();
+	private final AccountDAO accountDAO = new AccountDAO();
 	
 
 	@Override
@@ -37,39 +36,11 @@ public class AdditionalAccountHandler implements HttpRequestHandler {
 		try
 		{
 		if (path.equals("/admin/additional-account")) {
-			 HttpSession session = request.getSession(false); 
-			    if (session == null || session.getAttribute("personId") == null) {
-			    	 request.setAttribute("errorMessage", "session expired");
-		             request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
-			     
-			    }
-
-			List<Branch> branches = new BranchDAO().getAllBranches();
-			System.out.println(branches.toString());
-			request.setAttribute("branches", branches);
-		        request.setAttribute("page" , "additional-account");
-		        
-		         if(session.getAttribute("role").equals("ADMIN"))
-				{
-					request.getRequestDispatcher("/bank/admin/dashboard").forward(request, response);
-				}
-				else if(session.getAttribute("role").equals("SUPERADMIN"))
-				{
-					request.getRequestDispatcher("/bank/superadmin/dashboard").forward(request, response);
-				}
-				else
-				{
-					request.setAttribute("errorMessage", "Access Restricted");
-					request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
-				}
+			 handleGetAdminAdditional(request, response);
 
 			}
 		else if (path.equals("/customer/additional-account")) {
-			List<Branch> branches = new BranchDAO().getAllBranches();
-			System.out.println(branches.toString());
-			request.setAttribute("branches", branches);
-		        request.setAttribute("page" , "additional-account");
-		        request.getRequestDispatcher("/bank/customer/dashboard").forward(request, response);
+			handleGetCustomerAdditional(request, response);
 		}
 		}catch(IOException  | ServletException | SQLException e)
 		{
@@ -78,6 +49,42 @@ public class AdditionalAccountHandler implements HttpRequestHandler {
 		}
 
 		}
+
+
+
+	private void handleGetCustomerAdditional(HttpServletRequest request, HttpServletResponse response)
+			throws TaskException, SQLException, ServletException, IOException {
+		List<Branch> branches = new BranchDAO().getAllBranches();
+		System.out.println(branches.toString());
+		request.setAttribute("branches", branches);
+		    request.setAttribute("page" , "additional-account");
+		    request.getRequestDispatcher("/bank/customer/dashboard").forward(request, response);
+	}
+
+
+
+	private void handleGetAdminAdditional(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException, TaskException, SQLException {
+
+		List<Branch> branches = new BranchDAO().getAllBranches();
+		System.out.println(branches.toString());
+		request.setAttribute("branches", branches);
+		    request.setAttribute("page" , "additional-account");
+		    
+		     if(request.getAttribute("role").equals("ADMIN"))
+			{
+				request.getRequestDispatcher("/bank/admin/dashboard").forward(request, response);
+			}
+			else if(request.getAttribute("role").equals("SUPERADMIN"))
+			{
+				request.getRequestDispatcher("/bank/superadmin/dashboard").forward(request, response);
+			}
+			else
+			{
+				request.setAttribute("errorMessage", "Access Restricted");
+				request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
+			}
+	}
 	
 	
 	
@@ -105,14 +112,9 @@ public class AdditionalAccountHandler implements HttpRequestHandler {
 	
 
 	private boolean handleCreateAdditionalAccount(HttpServletRequest request, HttpServletResponse response) throws TaskException, IOException, ServletException, SQLException {
-		 HttpSession session = request.getSession(false); 
-		    if (session == null || session.getAttribute("personId") == null) {
-		    	 request.setAttribute("errorMessage", "session expired");
-	             request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
-		        return false;
-		    }
 
-		    String sessionPersonId = (String) session.getAttribute("personId");
+
+		    String sessionPersonId = (String) request.getAttribute("personId");
 		   
 		    
 		   
@@ -127,7 +129,7 @@ public class AdditionalAccountHandler implements HttpRequestHandler {
 		    
 		    String branchId = rootNode.path("branch_id").asText();
 		    String accountType = rootNode.path("account_type").asText();
-		    String role =(String) session.getAttribute("role") ; 
+		    String role =(String) request.getAttribute("role") ; 
 		    String customerId;
 		    if(role=="ADMIN" ||role =="SUPERADMIN" )
 		    {
@@ -143,14 +145,9 @@ public class AdditionalAccountHandler implements HttpRequestHandler {
 	}
 
 	private boolean handleAdminCreateAdditionalAccount(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, TaskException, SQLException {
-		 HttpSession session = request.getSession(false); 
-		    if (session == null || session.getAttribute("personId") == null) {
-		    	 request.setAttribute("errorMessage", "session expired");
-	             request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
-		        return false;
-		    }
+		
 
-		    String sessionPersonId = (String) session.getAttribute("personId");
+		    String sessionPersonId = (String) request.getAttribute("personId");
 
 		  
 		    BufferedReader bufferedReader = new BufferedReader(request.getReader());

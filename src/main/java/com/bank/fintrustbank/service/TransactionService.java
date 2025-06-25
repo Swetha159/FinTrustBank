@@ -8,6 +8,7 @@ import com.bank.fintrustbank.dao.AccountDAO;
 import com.bank.fintrustbank.dao.TransactionDAO;
 import com.bank.fintrustbank.model.Transaction;
 import com.bank.fintrustbank.util.QueryExecutor;
+import com.bank.fintrustbank.util.RowIdGenerator;
 import com.bank.fintrustbank.util.TransactionIdGenerator;
 import com.zoho.training.exceptions.TaskException;
 
@@ -25,7 +26,7 @@ public class TransactionService {
 		try {
 
 			Double senderBalance = accountDAO.getBalance(debit.getAccountNo());
-System.out.println(debit.getAccountNo());
+			System.out.println(debit.getAccountNo());
 
 			Double senderBalanceAfterTransaction = senderBalance - debit.getAmount();
 

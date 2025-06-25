@@ -10,11 +10,9 @@ import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.bank.fintrustbank.dao.BranchDAO;
 import com.bank.fintrustbank.dao.PersonDAO;
-import com.bank.fintrustbank.dao.PrivilegedUserDAO;
 import com.bank.fintrustbank.factory.PersonFactory;
 import com.bank.fintrustbank.factory.PrivilegedUserFactory;
 import com.bank.fintrustbank.model.Branch;
@@ -31,6 +29,10 @@ public class AdminHandler implements HttpRequestHandler{
 
 	private static final ObjectMapper mapper = new ObjectMapper()
 			.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE).findAndRegisterModules();
+	
+	private final  BranchDAO branchDAO = new BranchDAO();
+	
+	private final  PersonDAO personDAO = new PersonDAO();
 	
 	  @Override
 	    public void doPost(HttpServletRequest request, HttpServletResponse response) throws TaskException {
@@ -58,12 +60,14 @@ public class AdminHandler implements HttpRequestHandler{
 			 if(path.equals("/admins"))
 			 {
 				 handleGetAdmins(request, response);
-				 
-				 
+			 }
+			 if(path.equals("/superadmins"))
+			 {
+				 handleGetSuperAdmins(request, response);
 			 }
 			 if(path.equals("/admin"))
 			 {
-				 List<Branch> branches = new BranchDAO().getAllBranches();
+				 List<Branch> branches = branchDAO.getAllBranches();
 					System.out.println(branches.toString());
 				
 					request.setAttribute("branches", branches);
@@ -77,18 +81,28 @@ public class AdminHandler implements HttpRequestHandler{
 			 
 	  }
 
-	private void handleGetAdmins(HttpServletRequest request, HttpServletResponse response) throws IOException, TaskException, SQLException, ServletException {
-		String jsonBody = new BufferedReader(request.getReader()).lines().collect(Collectors.joining());
-		JsonNode rootNode = mapper.readTree(jsonBody);
-		HttpSession session = request.getSession(false);
-		if (session == null || session.getAttribute("personId") == null) {
-			request.setAttribute("errorMessage", "session expired");
-			request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
-			
+	private void handleGetSuperAdmins(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, TaskException, SQLException {
+		List<Map<String,Object>> superadmins = personDAO.getSuperAdmins();
+		if(superadmins!= null)
+		{
+			request.setAttribute("superadmins",superadmins ) ; 
+			request.setAttribute("page", "superadmins") ; 
+			request.getRequestDispatcher("/WEB-INF/admindashboard/superadmindashboard.jsp").forward(request, response) ; 
 		}
-		String sessionPersonId = (String) session.getAttribute("personId");
-		String branchId  = session.getAttribute("branch_id")!=null ? (String) session.getAttribute("branch_id") : new PrivilegedUserDAO().getBranch(sessionPersonId);
-		List<Map<String,Object>> admins = new PersonDAO().getAdmins(branchId);
+		else
+		{
+			request.setAttribute("page", "superadmins") ; 
+			request.getRequestDispatcher("/WEB-INF/admindashboard/superadmindashboard.jsp").forward(request, response) ; 
+		}
+		
+	}
+
+	private void handleGetAdmins(HttpServletRequest request, HttpServletResponse response) throws IOException, TaskException, SQLException, ServletException {
+	
+	
+	
+		String branchId  =  (String) request.getAttribute("branchId") ;
+		List<Map<String,Object>> admins = personDAO.getAdmins(branchId);
 		if(admins!= null)
 		{
 			request.setAttribute("admins",admins ) ; 
@@ -104,18 +118,13 @@ public class AdminHandler implements HttpRequestHandler{
 	private void handleAddAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, TaskException, SQLException {
 		
 
-		HttpSession session = request.getSession(false);
-		if (session == null || session.getAttribute("personId") == null) {
-			request.setAttribute("errorMessage", "session expired");
-			request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
-		}
-		
-		String sessionPersonId = (String) session.getAttribute("personId");
+		String sessionPersonId = (String) request.getAttribute("personId");
 		String jsonBody = new BufferedReader(request.getReader()).lines().collect(Collectors.joining());
 		JsonNode rootNode = mapper.readTree(jsonBody);
 
 		String branchId = rootNode.path("branch_id").asText();
-		Person person = PersonFactory.createPerson(sessionPersonId, jsonBody, "ACTIVE", "ADMIN");
+		String role = rootNode.path("role").asText();
+		Person person = PersonFactory.createPerson(sessionPersonId, jsonBody, "ACTIVE", role);
 		PrivilegedUser privilegedUser = PrivilegedUserFactory.createPrivilegedUser(person.getPersonId(), branchId, sessionPersonId);
 
 		AdminService service = new AdminService();

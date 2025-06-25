@@ -12,6 +12,7 @@ import javax.servlet.ServletContextListener;
 import org.yaml.snakeyaml.Yaml;
 
 import com.bank.fintrustbank.util.DataSourceHolder;
+import com.bank.fintrustbank.util.SessionUtil;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -52,6 +53,7 @@ public class ConfigLoaderListener implements ServletContextListener {
 			String dbUrl = properties.getProperty("DB_URL");
 			String dbUser = properties.getProperty("DB_USER");
 			String dbPassword = properties.getProperty("DB_PASSWORD");
+			String jwtSecret = properties.getProperty("JWT_SECRET");
 			int poolSize = Integer.parseInt(properties.getProperty("POOL_SIZE", "10"));
 			String dbDriver =  properties.getProperty("DB_DRIVER");
 			HikariConfig config = new HikariConfig();
@@ -66,6 +68,8 @@ public class ConfigLoaderListener implements ServletContextListener {
 
 			System.out.println("Database connection pool created successfully.");
 
+			context.setAttribute("JWT_SECRET", jwtSecret);
+			SessionUtil.setSecretKey(jwtSecret);
 		} catch (IOException | RuntimeException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Critical error: Failed to set up db connection pool ", e);

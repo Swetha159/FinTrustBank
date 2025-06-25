@@ -35,44 +35,36 @@
                 <td>${branch.branch_id}</td>
                 <td>${branch.location}</td>
                 <td>${branch.ifsc_code}</td>
-                <td>${branch.name}</td>
-                <td>${branch.created_at}</td>
-                <td>${branch.modified_at}</td>
-                <td>${branch.modifier_name}</td>
-                <td>
-                    <button type="button" onclick="editBranch('${branch.branch_id}')">Edit</button>
-                </td>
+       <td>
+    <c:choose>
+        <c:when test="${empty branch.name}">
+            Not yet assigned
+        </c:when>
+        <c:otherwise>
+            ${branch.name}
+        </c:otherwise>
+    </c:choose>
+</td>
+<td>${branch.created_at}</td>
+<td>${branch.modified_at}</td>
+<td>${branch.modifier_name}</td>
+<td>
+    <c:choose>
+        <c:when test="${empty branch.name}">
+            <button type="button" onclick="assignManager('${branch.branch_id}' , '${branch.location }')">Add Manager</button>
+        </c:when>
+        <c:otherwise>
+            <button type="button" onclick="assignManager('${branch.branch_id}' , '${branch.location }')">Change Manager</button>
+        </c:otherwise>
+    </c:choose>
+</td>
+
             </tr>
         </c:forEach>
     </tbody>
 </table>
 
 <script>
-function editBranch(branchId) {
-    fetch('${pageContext.request.contextPath}/bank/branchdetails', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ branch_id: branchId })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Failed to load branch details.");
-        }
-        return response.text();
-    })
-    .then(html => {
-        document.open();
-        document.write(html);
-        document.close();
-    })
-    .catch(error => {
-        console.error("Error editing branch:", error);
-        alert("Unable to edit branch.");
-    });
-}
-
 function openCreateBranch() {
     fetch('${pageContext.request.contextPath}/bank/branch', {
         method: 'GET'
@@ -93,6 +85,35 @@ function openCreateBranch() {
         alert("Unable to open Create Branch page.");
     });
 }
+
+function assignManager(branchId, location) {
+    const data = {
+        branch_id: branchId,
+        location: location
+    };
+
+    fetch('${pageContext.request.contextPath}/bank/branch/superadmin', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) throw new Error("Failed to load assign manager page.");
+        return response.text();
+    })
+    .then(html => {
+        document.open();
+        document.write(html);
+        document.close();
+    })
+    .catch(error => {
+        console.error("Error loading assign manager page:", error);
+        alert("Unable to open Assign Manager page.");
+    });
+}
+
 </script>
 
 </body>

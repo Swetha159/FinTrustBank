@@ -3,28 +3,32 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/header/header.css">
+    <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/header/header.css">
 </head>
-<header>
-  <div class="header-container">
-    <div class="bank-container">
-      <img src="<%= request.getContextPath() %>/assets/ftlogowhite.png" alt="logo" class="logo">
-      <div class="bank-text">
+<body>
+<header class="main-header">
+  <div class="header-content">
+    
+    <div class="brand">
+      <div class="logo">FT</div>
+      <div class="bank-info">
         <div class="bank-name">FINTRUST</div>
-        <div class="bank-tagline">Your Perfect Banking Partner</div>
+        <div class="tagline">Your Perfect Banking Partner</div>
       </div>
     </div>
 
-    <div class="support-links">
+    <nav class="nav-links">
       <a href="#">About</a>
       <a href="#">Help</a>
       <a href="#">FAQ</a>
       <a href="#">Complaint</a>
-    </div>
-<form action="login" method="get">
-  <button type="submit" class="login-button">Login</button>
-</form>
+    </nav>
+
+    <form action="login" method="get">
+      <button type="submit" class="login-btn">Login</button>
+    </form>
 
   </div>
 </header>
+</body>
 </html>

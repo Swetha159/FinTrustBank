@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/newaccount.css">
 </head>
 <body>
+
 <div class="page-wrapper">
     <jsp:include page="common/header/header.jsp" />
     <h2>Person Registration Form</h2>
@@ -86,7 +87,7 @@
                     </div>
                 </div>
 
-                <c:if test="${sessionScope.role ne 'ADMIN' and sessionScope.role ne 'SUPERADMIN'}">
+                <c:if test="${role ne 'ADMIN' and role ne 'SUPERADMIN'}">
                     <div class="row">
                         <div class="input-group">
                             <input type="password" id="password" name="password" required>
@@ -145,7 +146,7 @@
             data.password = form.confirmpassword.value;
         }
 
-        let url = "<%= request.getContextPath() %>/bank/account-request";
+        let url = "<%= request.getContextPath() %>/account-request";
         if (sessionRole === 'ADMIN' || sessionRole === 'SUPERADMIN') {
             url = "<%= request.getContextPath() %>/bank/admin/firstaccount";
         }
@@ -157,14 +158,15 @@
             },
             body: JSON.stringify(data)
         })
-        .then(response => {
-            if (response.ok) {
-                alert("Person registered successfully!");
-                // form.reset();
-            } else {
-                alert("Registration failed.");
-            }
-        })
+        .then(async response => {
+    const data = await response.json();
+    if (response.ok) {
+        alert("Registered successfully!");
+        // form.reset();
+    } else {
+        alert(data.message || "Registration failed.");
+    }
+})
         .catch(error => {
             console.error("Fetch error:", error);
             alert("Error communicating with the server.");

@@ -16,7 +16,7 @@ import querybuilder.QueryBuilder;
 
 public class AccountRequestDAO {
 
-	QueryExecutor qe = new QueryExecutor();
+	private final QueryExecutor qe = new QueryExecutor();
 	public boolean addRequest(AccountRequest acRequest) throws TaskException, SQLException {
 
 		Query addRequestQuery = new QueryBuilder().insert(AccountRequestField.PERSON_ID)

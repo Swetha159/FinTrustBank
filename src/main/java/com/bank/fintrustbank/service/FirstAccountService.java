@@ -15,10 +15,10 @@ import querybuilder.Query;
 
 public class FirstAccountService {
 
-	PersonDAO personDAO = new PersonDAO();
-	AccountDAO accountDAO = new AccountDAO();
-	AccountRequestDAO requestDAO = new AccountRequestDAO();
-	QueryExecutor qe = new QueryExecutor();
+private final PersonDAO personDAO = new PersonDAO();
+private final AccountDAO accountDAO = new AccountDAO();
+private final AccountRequestDAO requestDAO = new AccountRequestDAO();
+private final QueryExecutor qe = new QueryExecutor();
 
 	public boolean requestFirstAccount(AccountRequest acRequest, Person person) throws TaskException {
 		try {

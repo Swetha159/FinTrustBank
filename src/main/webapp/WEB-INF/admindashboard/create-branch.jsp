@@ -15,10 +15,6 @@
                 <input type="text" id="location" name="location" required />
             </div>
 
-            <div class="input-group">
-                <label for="managerId">Manager Person ID:</label>
-                <input type="text" id="managerId" name="managerId" required />
-            </div>
 
             <div class="button-group">
                 <button type="submit">Create Branch</button>
@@ -31,11 +27,10 @@
             e.preventDefault();
 
             const location = document.getElementById("location").value;
-            const managerId = document.getElementById("managerId").value;
-
+       
             const data = {
-                location: location,
-                manager_id: managerId
+                location: location 
+               
             };
 
             fetch('${pageContext.request.contextPath}/bank/branch', {

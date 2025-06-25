@@ -12,17 +12,14 @@
 
 /history:
   handler: TransactionHandler
-
   /withdraw:
     handler: TransactionHandler
-/history/creditcount:
-  handler: TransactionHandler
-
-/history/creditcount/debitcount:
-  handler: TransactionHandler
-
-/history/creditcount/debitcount/superadmin:
-  handler: SuperAdminHandler
+  /creditcount:
+    handler: TransactionHandler
+    /debitcount:
+      handler: TransactionHandler
+      /superadmin:
+        handler: SuperAdminHandler
 
 /creditcount:
   handler: TransactionHandler
@@ -39,19 +36,31 @@
 /person/details:
   handler: PersonHandler
 
+/person/status:
+  handler: PersonHandler
+
+/person/role:
+  handler: PersonHandler
+
 /login:
   handler: LoginHandler
 
 /logout:
   handler: LoginHandler
+  
+/longterm-token:
+    handler: LoginHandler
 
-/account-request:
-  handler: FirstAccountHandler
+/longterm-token/revocation:
+  handler: LoginHandler
 
 /account-request/approval:
   handler: FirstAccountHandler
 
 /account-request/rejection:
+  handler: FirstAccountHandler
+  
+/account-request : 
   handler: FirstAccountHandler
 
 /admin/firstaccount:
@@ -81,8 +90,8 @@
 /accounts:
   handler: AccountHandler
 
-/branch:
-  handler: BranchHandler
+/branch/superadmin:
+    handler: SuperAdminHandler
 
 /branches:
   handler: BranchHandler
@@ -105,17 +114,30 @@
 /customer/dashboard:
   handler: DashboardHandler
 
+/dashboard/status:
+  handler: DashboardHandler
+
 /profile:
   handler: PersonHandler
 
-/forgot-password : 
+/forgot-password:
   handler: PersonHandler
-  
+
 /reset-password:
   handler: PersonHandler
-  
+
 /beneficiary:
   handler: TransactionHandler
-    
-  /deposit:
-    handler: TransactionHandler 
+  
+  /account/status:
+      handler: AccountHandler
+
+/branch-accounts:
+  handler: AccountHandler
+
+/superadmins:
+  handler: AdminHandler
+  
+/branch :
+  handler: BranchHandler
+

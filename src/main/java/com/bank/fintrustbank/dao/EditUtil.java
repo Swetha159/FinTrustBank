@@ -11,43 +11,7 @@ import querybuilder.Query;
 import querybuilder.QueryBuilder;
 
 public class EditUtil {
-	/*
-	 * public static Query update(Object entity, Column table, Column
-	 * conditionColumn, List<Column> excludeColumns) throws TaskException { try {
-	 * Class<?> clazz = entity.getClass(); Field[] fields =
-	 * clazz.getDeclaredFields(); boolean conditionSet = false;
-	 * 
-	 * QueryBuilder qb = new QueryBuilder().update(table);
-	 * 
-	 * // Hold sets and condition separately Map<String, Object> setFields = new
-	 * java.util.LinkedHashMap<>(); Object conditionValue = null;
-	 * 
-	 * for (Field field : fields) { field.setAccessible(true); Object value =
-	 * field.get(entity); String columnCamel = field.getName(); String column =
-	 * toSnakeCase(columnCamel);
-	 * 
-	 * if (value != null && !excludeColumns.contains(column)) {
-	 * System.out.println(column); if (column.equals(conditionColumn)) {
-	 * conditionValue = value; conditionSet = true; } else { setFields.put(column,
-	 * value); } } }
-	 * 
-	 * 
-	 * if (!conditionSet) { throw new
-	 * TaskException("Condition column value is missing or null."); }
-	 * 
-	 * // Apply set fields first for (Map.Entry<String, Object> entry :
-	 * setFields.entrySet()) { qb.set(entry.getKey(), entry.getValue()); }
-	 * 
-	 * // Then apply where clause qb.where(conditionColumn, "=", conditionValue);
-	 * 
-	 * Query updateQuery = qb.build(); if (updateQuery.getValues().isEmpty()) {
-	 * throw new TaskException("No non-null fields to update."); }
-	 * 
-	 * return updateQuery;
-	 * 
-	 * } catch (Exception e) { throw new TaskException("Failed to update entity: " +
-	 * e.getMessage(), e); } }
-	 */
+
 	public static <T> Query update(Object entity, T table, T conditionColumn, List<T> excludeColumns) throws TaskException {
 	    try {
 	        Class<?> clazz = entity.getClass();

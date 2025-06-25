@@ -9,7 +9,7 @@ public enum PrivilegedUserField implements Column {
     MODIFIED_AT("modified_at"),
     MODIFIED_BY("modified_by");
 
-    private static final String TABLE_NAME = "privileged_user";  // Adjust if needed
+    private static final String TABLE_NAME = "privileged_user";  
 
     private final String column;
 

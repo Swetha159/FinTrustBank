@@ -14,7 +14,7 @@ import querybuilder.QueryBuilder;
 
 public class PrivilegedUserDAO {
 
-	QueryExecutor qe = new QueryExecutor();
+	private final QueryExecutor qe = new QueryExecutor();
 	public Query getInsertQuery(PrivilegedUser privilegedUser) throws TaskException {
 		
 		Query insertQuery = new QueryBuilder()
@@ -46,4 +46,14 @@ public class PrivilegedUserDAO {
 		}
 		return branchId ; 
     }
+
+	public Query getUpdateBranchQuery(String branchId, String personId) throws TaskException {
+	
+		Query updateBranch = new QueryBuilder()
+				.update(PrivilegedUserField.ADMIN_ID)
+				.set(PrivilegedUserField.BRANCH_ID, branchId)
+				.where(PrivilegedUserField.ADMIN_ID, "=", personId)
+				.build();
+		return updateBranch;
+	}
 }

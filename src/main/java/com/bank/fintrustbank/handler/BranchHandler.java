@@ -10,16 +10,12 @@ import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.bank.fintrustbank.dao.BranchDAO;
 import com.bank.fintrustbank.model.Branch;
-import com.bank.fintrustbank.model.Person;
 import com.bank.fintrustbank.util.BranchIdGenerator;
 import com.bank.fintrustbank.util.IFSCCodeGenerator;
 import com.bank.fintrustbank.util.TimeFormatter;
-import com.fasterxml.jackson.core.exc.StreamReadException;
-import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -30,7 +26,7 @@ public class BranchHandler implements HttpRequestHandler{
 	private static final ObjectMapper mapper = new ObjectMapper()
 	        .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
 	        .findAndRegisterModules();
-	BranchDAO branchDAO = new BranchDAO();
+	private final BranchDAO branchDAO = new BranchDAO();
 	 @Override
 	    public void doPost(HttpServletRequest request, HttpServletResponse response) throws TaskException {
 		  
@@ -39,7 +35,15 @@ public class BranchHandler implements HttpRequestHandler{
 			 if(path.equals("/branch"))
 			 {
 				 System.out.println("inside do post");
-				 handleAddBranch(request, response);
+				if(handleAddBranch(request, response))
+				{
+					response.setStatus(HttpServletResponse.SC_OK); 
+			
+				}
+				else
+				{
+					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				}
 			 }
 			 if(path.equals("/branchdetails"))
 			 {
@@ -47,6 +51,7 @@ public class BranchHandler implements HttpRequestHandler{
 			 }
 			 }catch (IOException  | ServletException | SQLException e) {
 					e.printStackTrace();
+					
 					throw new TaskException(e.getMessage(), e);
 				}
 			 
@@ -77,8 +82,8 @@ public class BranchHandler implements HttpRequestHandler{
 	  }
 	 
 	 private void handleBranchDetails(HttpServletRequest request, HttpServletResponse response) throws TaskException, SQLException, IOException, ServletException {
-		 HttpSession session = request.getSession(false);
-			String sessionPersonId = (String) session.getAttribute("personId");
+		
+			String sessionPersonId = (String) request.getAttribute("personId");
 			String jsonBody = new BufferedReader(request.getReader()).lines().collect(Collectors.joining());
 			JsonNode rootNode = mapper.readTree(jsonBody);
 			String branchId = rootNode.path("branch_id").asText();
@@ -140,12 +145,7 @@ public class BranchHandler implements HttpRequestHandler{
 	private boolean handleUpdateBranch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, TaskException, SQLException {
 		
 
-		HttpSession session = request.getSession(false);
-		if (session == null || session.getAttribute("personId") == null) {
-			request.setAttribute("errorMessage", "session expired");
-			request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
-		}
-		String sessionPersonId = (String) session.getAttribute("personId");
+		String sessionPersonId = (String) request.getAttribute("personId");
 		BufferedReader reader = request.getReader();
 		
 		Branch branch =mapper.readValue(reader,Branch.class);
@@ -159,22 +159,17 @@ public class BranchHandler implements HttpRequestHandler{
 	private boolean handleAddBranch(HttpServletRequest request, HttpServletResponse response) throws  IOException, ServletException, TaskException, SQLException {
 	
 
-		HttpSession session = request.getSession(false);
-		if (session == null || session.getAttribute("personId") == null) {
-			request.setAttribute("errorMessage", "session expired");
-			request.getRequestDispatcher("/WEB-INF/error/error.jsp").forward(request, response);
-
-		}
-		String sessionPersonId = (String) session.getAttribute("personId");
+		
+		String sessionPersonId = (String) request.getAttribute("personId");
 		
 		String jsonBody = new BufferedReader(request.getReader()).lines().collect(Collectors.joining());
 		JsonNode rootNode = mapper.readTree(jsonBody);
 		String location = rootNode.path("location").asText();
 		
 		String branchId = BranchIdGenerator.generateBranchId(location);
-		String managerId = rootNode.path("manager_id").asText();
+		//String managerId = rootNode.path("manager_id").asText();
 	
-		Branch branch = new Branch(branchId ,managerId, IFSCCodeGenerator.createCode(branchId, location), location , System.currentTimeMillis(),(Long)null ,sessionPersonId);
+		Branch branch = new Branch(branchId ,null, IFSCCodeGenerator.createCode(branchId, location), location , System.currentTimeMillis(),(Long)null ,sessionPersonId);
 		
 		return branchDAO.addBranch(branch);
 		

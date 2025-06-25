@@ -21,7 +21,6 @@
         <th>Account Number</th>
         <th>Branch</th>
         <th>Account Type</th>
-        <th>Set As Primary Account</th>
       </tr>
     </thead>
 
@@ -32,12 +31,7 @@
           <td>${account.account_no}</td>
           <td>${account.location}</td>
           <td>${account.account_type}</td>
-          <td>
-            <form action="${pageContext.request.contextPath}/bank/setPrimary" method="post">
-              <input type="hidden" name="account_no" value="${account.account_no}" />
-              <button type="submit">Set as Primary</button>
-            </form>
-          </td>
+         
         </tr>
       </c:forEach>
     </tbody>
